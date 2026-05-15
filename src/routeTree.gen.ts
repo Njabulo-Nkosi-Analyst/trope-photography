@@ -9,8 +9,68 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as SignUpRouteImport } from './routes/sign-up'
+import { Route as SignInRouteImport } from './routes/sign-in'
+import { Route as ResetPasswordRouteImport } from './routes/reset-password'
+import { Route as PricingRouteImport } from './routes/pricing'
+import { Route as GalleryRouteImport } from './routes/gallery'
+import { Route as ForgotPasswordRouteImport } from './routes/forgot-password'
+import { Route as DashboardRouteImport } from './routes/dashboard'
+import { Route as ContactRouteImport } from './routes/contact'
+import { Route as AdminRouteImport } from './routes/admin'
+import { Route as AboutRouteImport } from './routes/about'
 import { Route as IndexRouteImport } from './routes/index'
 
+const SignUpRoute = SignUpRouteImport.update({
+  id: '/sign-up',
+  path: '/sign-up',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SignInRoute = SignInRouteImport.update({
+  id: '/sign-in',
+  path: '/sign-in',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ResetPasswordRoute = ResetPasswordRouteImport.update({
+  id: '/reset-password',
+  path: '/reset-password',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PricingRoute = PricingRouteImport.update({
+  id: '/pricing',
+  path: '/pricing',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const GalleryRoute = GalleryRouteImport.update({
+  id: '/gallery',
+  path: '/gallery',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ForgotPasswordRoute = ForgotPasswordRouteImport.update({
+  id: '/forgot-password',
+  path: '/forgot-password',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DashboardRoute = DashboardRouteImport.update({
+  id: '/dashboard',
+  path: '/dashboard',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ContactRoute = ContactRouteImport.update({
+  id: '/contact',
+  path: '/contact',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AdminRoute = AdminRouteImport.update({
+  id: '/admin',
+  path: '/admin',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AboutRoute = AboutRouteImport.update({
+  id: '/about',
+  path: '/about',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
@@ -19,28 +79,172 @@ const IndexRoute = IndexRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/about': typeof AboutRoute
+  '/admin': typeof AdminRoute
+  '/contact': typeof ContactRoute
+  '/dashboard': typeof DashboardRoute
+  '/forgot-password': typeof ForgotPasswordRoute
+  '/gallery': typeof GalleryRoute
+  '/pricing': typeof PricingRoute
+  '/reset-password': typeof ResetPasswordRoute
+  '/sign-in': typeof SignInRoute
+  '/sign-up': typeof SignUpRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/about': typeof AboutRoute
+  '/admin': typeof AdminRoute
+  '/contact': typeof ContactRoute
+  '/dashboard': typeof DashboardRoute
+  '/forgot-password': typeof ForgotPasswordRoute
+  '/gallery': typeof GalleryRoute
+  '/pricing': typeof PricingRoute
+  '/reset-password': typeof ResetPasswordRoute
+  '/sign-in': typeof SignInRoute
+  '/sign-up': typeof SignUpRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/about': typeof AboutRoute
+  '/admin': typeof AdminRoute
+  '/contact': typeof ContactRoute
+  '/dashboard': typeof DashboardRoute
+  '/forgot-password': typeof ForgotPasswordRoute
+  '/gallery': typeof GalleryRoute
+  '/pricing': typeof PricingRoute
+  '/reset-password': typeof ResetPasswordRoute
+  '/sign-in': typeof SignInRoute
+  '/sign-up': typeof SignUpRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths:
+    | '/'
+    | '/about'
+    | '/admin'
+    | '/contact'
+    | '/dashboard'
+    | '/forgot-password'
+    | '/gallery'
+    | '/pricing'
+    | '/reset-password'
+    | '/sign-in'
+    | '/sign-up'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to:
+    | '/'
+    | '/about'
+    | '/admin'
+    | '/contact'
+    | '/dashboard'
+    | '/forgot-password'
+    | '/gallery'
+    | '/pricing'
+    | '/reset-password'
+    | '/sign-in'
+    | '/sign-up'
+  id:
+    | '__root__'
+    | '/'
+    | '/about'
+    | '/admin'
+    | '/contact'
+    | '/dashboard'
+    | '/forgot-password'
+    | '/gallery'
+    | '/pricing'
+    | '/reset-password'
+    | '/sign-in'
+    | '/sign-up'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AboutRoute: typeof AboutRoute
+  AdminRoute: typeof AdminRoute
+  ContactRoute: typeof ContactRoute
+  DashboardRoute: typeof DashboardRoute
+  ForgotPasswordRoute: typeof ForgotPasswordRoute
+  GalleryRoute: typeof GalleryRoute
+  PricingRoute: typeof PricingRoute
+  ResetPasswordRoute: typeof ResetPasswordRoute
+  SignInRoute: typeof SignInRoute
+  SignUpRoute: typeof SignUpRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/sign-up': {
+      id: '/sign-up'
+      path: '/sign-up'
+      fullPath: '/sign-up'
+      preLoaderRoute: typeof SignUpRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/sign-in': {
+      id: '/sign-in'
+      path: '/sign-in'
+      fullPath: '/sign-in'
+      preLoaderRoute: typeof SignInRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/reset-password': {
+      id: '/reset-password'
+      path: '/reset-password'
+      fullPath: '/reset-password'
+      preLoaderRoute: typeof ResetPasswordRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/pricing': {
+      id: '/pricing'
+      path: '/pricing'
+      fullPath: '/pricing'
+      preLoaderRoute: typeof PricingRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/gallery': {
+      id: '/gallery'
+      path: '/gallery'
+      fullPath: '/gallery'
+      preLoaderRoute: typeof GalleryRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/forgot-password': {
+      id: '/forgot-password'
+      path: '/forgot-password'
+      fullPath: '/forgot-password'
+      preLoaderRoute: typeof ForgotPasswordRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/dashboard': {
+      id: '/dashboard'
+      path: '/dashboard'
+      fullPath: '/dashboard'
+      preLoaderRoute: typeof DashboardRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/contact': {
+      id: '/contact'
+      path: '/contact'
+      fullPath: '/contact'
+      preLoaderRoute: typeof ContactRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/admin': {
+      id: '/admin'
+      path: '/admin'
+      fullPath: '/admin'
+      preLoaderRoute: typeof AdminRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/about': {
+      id: '/about'
+      path: '/about'
+      fullPath: '/about'
+      preLoaderRoute: typeof AboutRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -53,17 +257,17 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AboutRoute: AboutRoute,
+  AdminRoute: AdminRoute,
+  ContactRoute: ContactRoute,
+  DashboardRoute: DashboardRoute,
+  ForgotPasswordRoute: ForgotPasswordRoute,
+  GalleryRoute: GalleryRoute,
+  PricingRoute: PricingRoute,
+  ResetPasswordRoute: ResetPasswordRoute,
+  SignInRoute: SignInRoute,
+  SignUpRoute: SignUpRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}
