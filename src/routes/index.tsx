@@ -44,7 +44,7 @@ function Home() {
             Capturing moments<br />
             <span className="text-gradient-warm">that last forever.</span>
           </h1>
-          <p className="mt-6 text-base md:text-lg text-muted-foreground max-w-2xl mx-auto">
+          <p className="mt-6 text-base md:text-lg text-muted-foreground max-w-2xl mx-auto bg-slate-50">
             Garlo Studio · Cape Town, South Africa. Wedding, portrait, event and brand photography crafted with cinematic care.
           </p>
         </div>
