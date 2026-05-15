@@ -36,7 +36,8 @@ function Admin() {
     if (error) toast.error(error.message); else { toast.success("Updated"); qc.invalidateQueries({ queryKey: ["all-inquiries"] }); }
   };
   const togglePackage = async (id: string, field: "is_active" | "is_popular", val: boolean) => {
-    const { error } = await supabase.from("packages").update({ [field]: val }).eq("id", id);
+    const patch = field === "is_active" ? { is_active: val } : { is_popular: val };
+    const { error } = await supabase.from("packages").update(patch).eq("id", id);
     if (error) toast.error(error.message); else qc.invalidateQueries({ queryKey: ["all-packages"] });
   };
   const updatePrice = async (id: string, price: number) => {
