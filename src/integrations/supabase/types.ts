@@ -44,6 +44,33 @@ export type Database = {
         }
         Relationships: []
       }
+      hero_images: {
+        Row: {
+          category_label: string
+          created_at: string
+          id: string
+          is_active: boolean
+          sort_order: number
+          url: string
+        }
+        Insert: {
+          category_label: string
+          created_at?: string
+          id?: string
+          is_active?: boolean
+          sort_order?: number
+          url: string
+        }
+        Update: {
+          category_label?: string
+          created_at?: string
+          id?: string
+          is_active?: boolean
+          sort_order?: number
+          url?: string
+        }
+        Relationships: []
+      }
       inquiries: {
         Row: {
           category: string | null
@@ -89,6 +116,7 @@ export type Database = {
       packages: {
         Row: {
           category: string
+          cover_image_url: string | null
           created_at: string
           duration: string
           features: Json
@@ -101,6 +129,7 @@ export type Database = {
         }
         Insert: {
           category: string
+          cover_image_url?: string | null
           created_at?: string
           duration: string
           features?: Json
@@ -113,6 +142,7 @@ export type Database = {
         }
         Update: {
           category?: string
+          cover_image_url?: string | null
           created_at?: string
           duration?: string
           features?: Json
@@ -152,6 +182,36 @@ export type Database = {
           phone?: string | null
           updated_at?: string
           whatsapp?: string | null
+        }
+        Relationships: []
+      }
+      promotions: {
+        Row: {
+          created_at: string
+          description: string | null
+          discount_label: string | null
+          ends_at: string
+          id: string
+          is_active: boolean
+          title: string
+        }
+        Insert: {
+          created_at?: string
+          description?: string | null
+          discount_label?: string | null
+          ends_at: string
+          id?: string
+          is_active?: boolean
+          title: string
+        }
+        Update: {
+          created_at?: string
+          description?: string | null
+          discount_label?: string | null
+          ends_at?: string
+          id?: string
+          is_active?: boolean
+          title?: string
         }
         Relationships: []
       }
