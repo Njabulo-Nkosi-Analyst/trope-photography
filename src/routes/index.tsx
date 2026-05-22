@@ -5,14 +5,10 @@ import { Layout } from "@/components/Layout";
 import { supabase } from "@/integrations/supabase/client";
 import { ArrowRight, Play, Star } from "lucide-react";
 
-const CATEGORIES = [
-  { name: "Weddings", img: "https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=1600&q=80" },
-  { name: "Portraits", img: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=1600&q=80" },
-  { name: "Events", img: "https://images.unsplash.com/photo-1492684223066-81342ee5ff30?auto=format&fit=crop&w=1600&q=80" },
-  { name: "Sport", img: "https://images.unsplash.com/photo-1517649763962-0c623066013b?auto=format&fit=crop&w=1600&q=80" },
-  { name: "Couples", img: "https://images.unsplash.com/photo-1519225421980-715cb0215aed?auto=format&fit=crop&w=1600&q=80" },
-  { name: "Family", img: "https://images.unsplash.com/photo-1503454537195-1dcabb73ffb9?auto=format&fit=crop&w=1600&q=80" },
-  { name: "Corporate", img: "https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?auto=format&fit=crop&w=1600&q=80" },
+const FALLBACK_HERO = [
+  { id: "1", url: "https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=1600&q=80", category_label: "Weddings" },
+  { id: "2", url: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=1600&q=80", category_label: "Portraits" },
+  { id: "3", url: "https://images.unsplash.com/photo-1492684223066-81342ee5ff30?auto=format&fit=crop&w=1600&q=80", category_label: "Events" },
 ];
 
 const FEATURED = [
@@ -35,19 +31,28 @@ function Home() {
     queryFn: async () => (await supabase.from("testimonials").select("*").limit(3)).data ?? [],
   });
 
+  const { data: hero = FALLBACK_HERO } = useQuery({
+    queryKey: ["hero-images"],
+    queryFn: async () => {
+      const { data } = await supabase.from("hero_images").select("*").eq("is_active", true).order("sort_order");
+      return data && data.length > 0 ? data : FALLBACK_HERO;
+    },
+  });
+
   const [activeCat, setActiveCat] = useState(0);
   useEffect(() => {
-    const id = setInterval(() => setActiveCat(c => (c + 1) % CATEGORIES.length), 3500);
+    if (hero.length < 2) return;
+    const id = setInterval(() => setActiveCat(c => (c + 1) % hero.length), 3500);
     return () => clearInterval(id);
-  }, []);
+  }, [hero.length]);
 
   return (
     <Layout>
-      {/* Hero with rotating background */}
+      {/* Hero with rotating background (admin-managed) */}
       <section className="relative overflow-hidden min-h-[85vh]">
         <div className="absolute inset-0">
-          {CATEGORIES.map((c, i) => (
-            <img key={c.name} src={c.img} alt={c.name} loading={i === 0 ? "eager" : "lazy"}
+          {hero.map((c, i) => (
+            <img key={c.id} src={c.url} alt={c.category_label} loading={i === 0 ? "eager" : "lazy"}
               className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-1000 ${i === activeCat ? "opacity-100" : "opacity-0"}`} />
           ))}
           <div className="absolute inset-0 bg-gradient-to-r from-background via-background/85 to-background/30" />
@@ -58,7 +63,7 @@ function Home() {
           <div className="max-w-3xl">
             <div className="flex items-center gap-3 text-xs uppercase tracking-[0.25em] text-muted-foreground">
               <span className="w-10 h-px bg-muted-foreground/60" />
-              TANN Photography · {CATEGORIES[activeCat].name}
+              TANN Photography · {hero[activeCat]?.category_label}
             </div>
             <h1 className="mt-6 font-display text-5xl md:text-7xl lg:text-8xl font-bold leading-[0.95]">
               Your story<br />
@@ -75,14 +80,16 @@ function Home() {
                 <Play size={14} className="fill-current" /> View Gallery
               </Link>
             </div>
-            <div className="mt-10 flex flex-wrap gap-2">
-              {CATEGORIES.map((c, i) => (
-                <button key={c.name} onClick={() => setActiveCat(i)}
-                  className={`px-4 py-1.5 rounded-full text-xs border transition-all ${i === activeCat ? "bg-primary text-primary-foreground border-primary" : "bg-secondary/60 backdrop-blur border-border text-muted-foreground hover:text-foreground"}`}>
-                  {c.name}
-                </button>
-              ))}
-            </div>
+            {hero.length > 1 && (
+              <div className="mt-10 flex flex-wrap gap-2">
+                {hero.map((c, i) => (
+                  <button key={c.id} onClick={() => setActiveCat(i)}
+                    className={`px-4 py-1.5 rounded-full text-xs border transition-all ${i === activeCat ? "bg-primary text-primary-foreground border-primary" : "bg-secondary/60 backdrop-blur border-border text-muted-foreground hover:text-foreground"}`}>
+                    {c.category_label}
+                  </button>
+                ))}
+              </div>
+            )}
           </div>
         </div>
       </section>
@@ -155,8 +162,6 @@ function Home() {
           <Link to="/contact" className="mt-8 inline-flex btn-lime px-6 py-3 rounded-md text-sm">Start your booking</Link>
         </div>
       </section>
-
-      <style>{`@keyframes fadeUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:none}}`}</style>
     </Layout>
   );
 }
