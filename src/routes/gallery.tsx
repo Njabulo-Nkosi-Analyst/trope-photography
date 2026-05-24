@@ -1,9 +1,11 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Layout } from "@/components/Layout";
 import { supabase } from "@/integrations/supabase/client";
-import { X, Tag, Clock, ArrowRight } from "lucide-react";
+import { VideoEmbed } from "@/components/VideoEmbed";
+import { useFavourites } from "@/hooks/useFavourites";
+import { X, Tag, Clock, ArrowRight, Heart, Image as ImageIcon, Play } from "lucide-react";
 
 const FALLBACK = [
   { category: "Weddings", url: "https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=900&q=80" },
@@ -19,7 +21,7 @@ const FALLBACK = [
 const TABS = ["All", "Weddings", "Portraits", "Events", "Products", "Maternity", "Kids", "Corporate"];
 
 export const Route = createFileRoute("/gallery")({
-  head: () => ({ meta: [{ title: "Gallery — Garlo Studio" }] }),
+  head: () => ({ meta: [{ title: "Gallery — TANN Photography" }] }),
   component: Gallery,
 });
 
@@ -48,7 +50,9 @@ function Countdown({ ends }: { ends: string }) {
 
 function Gallery() {
   const [tab, setTab] = useState("All");
+  const [mode, setMode] = useState<"photos" | "video">("photos");
   const [lightbox, setLightbox] = useState<string | null>(null);
+  const { isFav, toggle, count } = useFavourites();
 
   const { data: images = FALLBACK } = useQuery({
     queryKey: ["gallery"],
@@ -56,6 +60,11 @@ function Gallery() {
       const { data } = await supabase.from("gallery_images").select("*").order("sort_order");
       return data && data.length > 0 ? data : FALLBACK;
     },
+  });
+
+  const { data: packages = [] } = useQuery({
+    queryKey: ["packages-with-video"],
+    queryFn: async () => (await supabase.from("packages").select("category,name,video_url,cover_image_url").eq("is_active", true)).data ?? [],
   });
 
   const { data: promo } = useQuery({
@@ -74,6 +83,14 @@ function Gallery() {
   });
 
   const filtered = tab === "All" ? images : images.filter(i => i.category === tab);
+
+  const videos = useMemo(() => {
+    const list = packages.filter(p => p.video_url) as { category: string; name: string; video_url: string; cover_image_url: string | null }[];
+    return tab === "All" ? list : list.filter(v => v.category === tab || v.category === tab.replace(/s$/, ""));
+  }, [packages, tab]);
+
+  // Reset to photos if switching to a category without videos
+  useEffect(() => { if (mode === "video" && videos.length === 0) setMode("photos"); }, [videos.length, mode]);
 
   return (
     <Layout>
@@ -105,10 +122,18 @@ function Gallery() {
           </div>
         )}
 
-        <span className="eyebrow">Gallery</span>
-        <h1 className="font-display text-5xl md:text-7xl font-bold mt-3">
-          Browse my <span className="text-gradient-warm">work</span>
-        </h1>
+        <div className="flex items-end justify-between flex-wrap gap-4">
+          <div>
+            <span className="eyebrow">Gallery</span>
+            <h1 className="font-display text-5xl md:text-7xl font-bold mt-3">
+              Browse my <span className="text-gradient-warm">work</span>
+            </h1>
+          </div>
+          <Link to="/favourites" className="panel px-4 py-2.5 rounded-full text-sm inline-flex items-center gap-2 hover:border-primary transition-colors">
+            <Heart size={14} className={count > 0 ? "fill-primary text-primary" : ""} />
+            Favourites {count > 0 && <span className="bg-primary text-primary-foreground rounded-full text-[10px] min-w-[18px] h-[18px] px-1 grid place-items-center font-bold">{count}</span>}
+          </Link>
+        </div>
 
         <div className="mt-8 flex flex-wrap items-center gap-2 justify-between">
           <div className="flex flex-wrap gap-2">
@@ -119,7 +144,6 @@ function Gallery() {
               </button>
             ))}
           </div>
-          {/* Book Now button — always visible on every tab */}
           <Link
             to="/contact"
             search={tab === "All" ? {} : { category: tab.replace(/s$/, "") } as any}
@@ -129,17 +153,66 @@ function Gallery() {
           </Link>
         </div>
 
-        <div className="mt-10 columns-2 md:columns-3 lg:columns-4 gap-3 [column-fill:_balance]">
-          {filtered.map((img, i) => (
-            <button key={i} onClick={() => setLightbox(img.url)}
-              className="mb-3 break-inside-avoid block w-full overflow-hidden rounded-xl bg-secondary">
-              <img src={img.url} alt={img.category} loading="lazy"
-                className="w-full hover:scale-105 transition-transform duration-700" />
-            </button>
-          ))}
+        {/* Photos / Video switcher */}
+        <div className="mt-6 inline-flex p-1 bg-secondary rounded-full">
+          <button onClick={() => setMode("photos")}
+            className={`px-4 py-1.5 rounded-full text-xs uppercase tracking-wider inline-flex items-center gap-1.5 transition-all ${mode === "photos" ? "bg-primary text-primary-foreground font-semibold" : "text-muted-foreground"}`}>
+            <ImageIcon size={12} /> Photos
+          </button>
+          <button onClick={() => setMode("video")} disabled={videos.length === 0}
+            className={`px-4 py-1.5 rounded-full text-xs uppercase tracking-wider inline-flex items-center gap-1.5 transition-all disabled:opacity-40 disabled:cursor-not-allowed ${mode === "video" ? "bg-primary text-primary-foreground font-semibold" : "text-muted-foreground"}`}>
+            <Play size={12} /> Video {videos.length > 0 && <span className="opacity-70">({videos.length})</span>}
+          </button>
         </div>
 
-        {/* Bottom CTA so any browsing client can book without scrolling back up */}
+        {mode === "photos" ? (
+          <div className="mt-8 columns-2 md:columns-3 lg:columns-4 gap-3 [column-fill:_balance]">
+            {filtered.map((img, i) => {
+              const fav = isFav(img.url);
+              return (
+                <div key={i} className="mb-3 break-inside-avoid relative group rounded-xl overflow-hidden bg-secondary">
+                  <button onClick={() => setLightbox(img.url)} className="block w-full">
+                    <img src={img.url} alt={img.category} loading="lazy"
+                      className="w-full hover:scale-105 transition-transform duration-700" />
+                  </button>
+                  <button
+                    onClick={(e) => { e.stopPropagation(); toggle({ url: img.url, category: img.category, caption: (img as any).caption ?? null }); }}
+                    aria-label={fav ? "Remove from favourites" : "Save to favourites"}
+                    className={`absolute top-2 right-2 w-9 h-9 rounded-full grid place-items-center backdrop-blur transition-all ${fav ? "bg-primary text-primary-foreground" : "bg-background/70 text-foreground opacity-0 group-hover:opacity-100"}`}>
+                    <Heart size={16} className={fav ? "fill-current" : ""} />
+                  </button>
+                </div>
+              );
+            })}
+          </div>
+        ) : (
+          <div className="mt-8 grid md:grid-cols-2 gap-5">
+            {videos.map((v, i) => (
+              <div key={i} className="panel overflow-hidden">
+                <div className="aspect-video bg-black">
+                  <VideoEmbed url={v.video_url} title={v.name} className="w-full h-full" />
+                </div>
+                <div className="p-4 flex items-center justify-between gap-3">
+                  <div>
+                    <div className="text-xs uppercase tracking-wider text-muted-foreground">{v.category}</div>
+                    <div className="font-display text-lg font-bold">{v.name}</div>
+                  </div>
+                  <Link to="/contact" search={{ category: v.category, package: v.name } as any}
+                    className="btn-lime px-4 py-2 rounded-md text-xs inline-flex items-center gap-1.5">
+                    Book this <ArrowRight size={12} />
+                  </Link>
+                </div>
+              </div>
+            ))}
+            {videos.length === 0 && (
+              <div className="md:col-span-2 panel p-10 text-center text-muted-foreground text-sm">
+                No videos uploaded for this category yet.
+              </div>
+            )}
+          </div>
+        )}
+
+        {/* Bottom CTA */}
         <div className="mt-12 panel p-8 text-center">
           <h3 className="font-display text-2xl md:text-3xl font-bold">Like what you see?</h3>
           <p className="text-sm text-muted-foreground mt-2">Book your {tab === "All" ? "session" : tab.toLowerCase() + " session"} today — limited slots each month.</p>

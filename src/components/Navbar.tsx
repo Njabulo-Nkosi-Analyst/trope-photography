@@ -1,7 +1,8 @@
 import { Link } from "@tanstack/react-router";
-import { Menu, X } from "lucide-react";
+import { Menu, X, Heart } from "lucide-react";
 import { useState } from "react";
 import { useAuth } from "@/lib/auth";
+import { useFavourites } from "@/hooks/useFavourites";
 
 const links = [
   { to: "/", label: "Home" },
@@ -14,6 +15,7 @@ const links = [
 export function Navbar() {
   const [open, setOpen] = useState(false);
   const { user, isAdmin } = useAuth();
+  const { count } = useFavourites();
 
   return (
     <header className="sticky top-0 z-50 backdrop-blur-xl bg-background/70 border-b border-border">
@@ -31,6 +33,10 @@ export function Navbar() {
           ))}
         </nav>
         <div className="hidden lg:flex items-center gap-4">
+          <Link to="/favourites" className="relative text-muted-foreground hover:text-foreground transition-colors" aria-label="Favourites">
+            <Heart size={18} className={count > 0 ? "fill-primary text-primary" : ""} />
+            {count > 0 && <span className="absolute -top-2 -right-2 bg-primary text-primary-foreground text-[10px] min-w-[16px] h-[16px] rounded-full px-1 grid place-items-center font-bold">{count}</span>}
+          </Link>
           <a href="tel:0714967968" className="text-sm text-muted-foreground hover:text-foreground flex items-center gap-2">
             <span>📞</span> 071 496 7968
           </a>
@@ -52,6 +58,9 @@ export function Navbar() {
           {links.map(l => (
             <Link key={l.to} to={l.to} className="block text-base" onClick={() => setOpen(false)}>{l.label}</Link>
           ))}
+          <Link to="/favourites" onClick={() => setOpen(false)} className="block text-base inline-flex items-center gap-2">
+            <Heart size={14} className={count > 0 ? "fill-primary text-primary" : ""} /> Favourites {count > 0 && <span className="text-xs text-muted-foreground">({count})</span>}
+          </Link>
           <div className="pt-3 border-t border-border flex items-center justify-between">
             {user
               ? <Link to={isAdmin ? "/admin" : "/dashboard"} onClick={() => setOpen(false)} className="text-sm">{isAdmin ? "Admin" : "Dashboard"}</Link>
