@@ -8,7 +8,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/lib/auth";
 import { useEffect } from "react";
 import { toast } from "sonner";
-import { Mail, Instagram, MessageCircle, Check, ArrowDown } from "lucide-react";
+import { Mail, Instagram, MessageCircle, Check, ArrowDown, Shield, Star, Camera, Zap } from "lucide-react";
 
 const schema = z.object({
   name: z.string().trim().min(1).max(200),
@@ -160,17 +160,45 @@ function Contact() {
             </form>
 
             <aside className="space-y-4">
-              <a href="https://wa.me/27123456789" target="_blank" rel="noreferrer" className="panel p-5 flex items-center gap-3 hover:border-primary transition-colors">
+              {/* Response time indicator */}
+              <div className="panel p-5 bg-gradient-to-br from-primary/10 via-background to-background border-primary/30">
+                <div className="flex items-center gap-2 text-xs uppercase tracking-widest text-primary font-semibold">
+                  <span className="relative flex h-2 w-2">
+                    <span className="absolute inline-flex h-full w-full rounded-full bg-primary opacity-75 animate-ping"></span>
+                    <span className="relative inline-flex rounded-full h-2 w-2 bg-primary"></span>
+                  </span>
+                  Replies within ~2 hours
+                </div>
+                <p className="text-sm text-muted-foreground mt-2">Most inquiries get a personal reply the same day. Weekend bookings get priority.</p>
+              </div>
+
+              {/* Trust badges */}
+              <div className="panel p-5 space-y-3">
+                <div className="text-xs uppercase tracking-widest text-muted-foreground font-semibold">Why book with us</div>
+                {[
+                  { icon: <Shield size={16} />, label: "Secure deposit & contract" },
+                  { icon: <Camera size={16} />, label: "150+ shoots delivered" },
+                  { icon: <Star size={16} />, label: "5-star rated by clients" },
+                  { icon: <Zap size={16} />, label: "48h preview gallery" },
+                ].map((b, i) => (
+                  <div key={i} className="flex items-center gap-3 text-sm">
+                    <span className="w-8 h-8 rounded-full bg-primary/15 text-primary grid place-items-center shrink-0">{b.icon}</span>
+                    <span>{b.label}</span>
+                  </div>
+                ))}
+              </div>
+
+              <a href="https://wa.me/27714967968" target="_blank" rel="noreferrer" className="panel p-5 flex items-center gap-3 hover:border-primary transition-colors">
                 <span className="w-10 h-10 rounded-full bg-primary text-primary-foreground grid place-items-center"><MessageCircle size={18} /></span>
-                <div><div className="text-xs text-muted-foreground">WhatsApp</div><div className="font-semibold text-sm">+27 12 345 6789</div></div>
+                <div><div className="text-xs text-muted-foreground">WhatsApp</div><div className="font-semibold text-sm">071 496 7968</div></div>
               </a>
-              <a href="mailto:hello@garlostudio.com" className="panel p-5 flex items-center gap-3 hover:border-primary transition-colors">
+              <a href="mailto:hello@tannphotography.com" className="panel p-5 flex items-center gap-3 hover:border-primary transition-colors">
                 <span className="w-10 h-10 rounded-full bg-primary text-primary-foreground grid place-items-center"><Mail size={18} /></span>
-                <div><div className="text-xs text-muted-foreground">Email</div><div className="font-semibold text-sm">hello@garlostudio.com</div></div>
+                <div><div className="text-xs text-muted-foreground">Email</div><div className="font-semibold text-sm">hello@tannphotography.com</div></div>
               </a>
-              <a href="https://instagram.com/garlostudio" target="_blank" rel="noreferrer" className="panel p-5 flex items-center gap-3 hover:border-primary transition-colors">
+              <a href="https://instagram.com/tannphotography" target="_blank" rel="noreferrer" className="panel p-5 flex items-center gap-3 hover:border-primary transition-colors">
                 <span className="w-10 h-10 rounded-full bg-primary text-primary-foreground grid place-items-center"><Instagram size={18} /></span>
-                <div><div className="text-xs text-muted-foreground">Instagram</div><div className="font-semibold text-sm">@garlostudio</div></div>
+                <div><div className="text-xs text-muted-foreground">Instagram</div><div className="font-semibold text-sm">@tannphotography</div></div>
               </a>
             </aside>
           </div>

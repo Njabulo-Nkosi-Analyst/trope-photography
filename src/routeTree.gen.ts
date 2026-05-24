@@ -15,6 +15,7 @@ import { Route as ResetPasswordRouteImport } from './routes/reset-password'
 import { Route as PricingRouteImport } from './routes/pricing'
 import { Route as GalleryRouteImport } from './routes/gallery'
 import { Route as ForgotPasswordRouteImport } from './routes/forgot-password'
+import { Route as FavouritesRouteImport } from './routes/favourites'
 import { Route as DashboardRouteImport } from './routes/dashboard'
 import { Route as ContactRouteImport } from './routes/contact'
 import { Route as AdminRouteImport } from './routes/admin'
@@ -51,6 +52,11 @@ const ForgotPasswordRoute = ForgotPasswordRouteImport.update({
   path: '/forgot-password',
   getParentRoute: () => rootRouteImport,
 } as any)
+const FavouritesRoute = FavouritesRouteImport.update({
+  id: '/favourites',
+  path: '/favourites',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const DashboardRoute = DashboardRouteImport.update({
   id: '/dashboard',
   path: '/dashboard',
@@ -83,6 +89,7 @@ export interface FileRoutesByFullPath {
   '/admin': typeof AdminRoute
   '/contact': typeof ContactRoute
   '/dashboard': typeof DashboardRoute
+  '/favourites': typeof FavouritesRoute
   '/forgot-password': typeof ForgotPasswordRoute
   '/gallery': typeof GalleryRoute
   '/pricing': typeof PricingRoute
@@ -96,6 +103,7 @@ export interface FileRoutesByTo {
   '/admin': typeof AdminRoute
   '/contact': typeof ContactRoute
   '/dashboard': typeof DashboardRoute
+  '/favourites': typeof FavouritesRoute
   '/forgot-password': typeof ForgotPasswordRoute
   '/gallery': typeof GalleryRoute
   '/pricing': typeof PricingRoute
@@ -110,6 +118,7 @@ export interface FileRoutesById {
   '/admin': typeof AdminRoute
   '/contact': typeof ContactRoute
   '/dashboard': typeof DashboardRoute
+  '/favourites': typeof FavouritesRoute
   '/forgot-password': typeof ForgotPasswordRoute
   '/gallery': typeof GalleryRoute
   '/pricing': typeof PricingRoute
@@ -125,6 +134,7 @@ export interface FileRouteTypes {
     | '/admin'
     | '/contact'
     | '/dashboard'
+    | '/favourites'
     | '/forgot-password'
     | '/gallery'
     | '/pricing'
@@ -138,6 +148,7 @@ export interface FileRouteTypes {
     | '/admin'
     | '/contact'
     | '/dashboard'
+    | '/favourites'
     | '/forgot-password'
     | '/gallery'
     | '/pricing'
@@ -151,6 +162,7 @@ export interface FileRouteTypes {
     | '/admin'
     | '/contact'
     | '/dashboard'
+    | '/favourites'
     | '/forgot-password'
     | '/gallery'
     | '/pricing'
@@ -165,6 +177,7 @@ export interface RootRouteChildren {
   AdminRoute: typeof AdminRoute
   ContactRoute: typeof ContactRoute
   DashboardRoute: typeof DashboardRoute
+  FavouritesRoute: typeof FavouritesRoute
   ForgotPasswordRoute: typeof ForgotPasswordRoute
   GalleryRoute: typeof GalleryRoute
   PricingRoute: typeof PricingRoute
@@ -217,6 +230,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ForgotPasswordRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/favourites': {
+      id: '/favourites'
+      path: '/favourites'
+      fullPath: '/favourites'
+      preLoaderRoute: typeof FavouritesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/dashboard': {
       id: '/dashboard'
       path: '/dashboard'
@@ -261,6 +281,7 @@ const rootRouteChildren: RootRouteChildren = {
   AdminRoute: AdminRoute,
   ContactRoute: ContactRoute,
   DashboardRoute: DashboardRoute,
+  FavouritesRoute: FavouritesRoute,
   ForgotPasswordRoute: ForgotPasswordRoute,
   GalleryRoute: GalleryRoute,
   PricingRoute: PricingRoute,
