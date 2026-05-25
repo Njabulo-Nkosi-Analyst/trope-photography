@@ -105,6 +105,24 @@ function Admin() {
     const prev7 = inquiries.filter(i => { const d = now - new Date(i.created_at).getTime(); return d >= week && d < 2 * week; }).length;
     const growth = prev7 ? ((last7 - prev7) / prev7) * 100 : last7 ? 100 : 0;
     const last30Revenue = bookings.filter(b => now - new Date(b.confirmed_at).getTime() < 30 * 86400000).reduce((s, b) => s + Number(b.final_price), 0);
+
+    // Month-over-month revenue growth %
+    const d = new Date();
+    const thisMonthStart = new Date(d.getFullYear(), d.getMonth(), 1).getTime();
+    const lastMonthStart = new Date(d.getFullYear(), d.getMonth() - 1, 1).getTime();
+    const thisMonthRev = bookings.filter(b => new Date(b.confirmed_at).getTime() >= thisMonthStart).reduce((s, b) => s + Number(b.final_price), 0);
+    const lastMonthRev = bookings.filter(b => { const t = new Date(b.confirmed_at).getTime(); return t >= lastMonthStart && t < thisMonthStart; }).reduce((s, b) => s + Number(b.final_price), 0);
+    const monthGrowth = lastMonthRev ? ((thisMonthRev - lastMonthRev) / lastMonthRev) * 100 : thisMonthRev ? 100 : 0;
+
+    // Avg spend per unique client (for pricing decisions)
+    const spendByClient = new Map<string, number>();
+    bookings.forEach(b => {
+      const key = (b.client_email || b.client_name || b.id).toLowerCase();
+      spendByClient.set(key, (spendByClient.get(key) ?? 0) + Number(b.final_price));
+    });
+    const uniqueClients = spendByClient.size;
+    const avgSpendPerClient = uniqueClients ? netRevenue / uniqueClients : 0;
+
     // top expense category
     const catTotals: Record<string, number> = {};
     expenses.forEach(e => { catTotals[e.type] = (catTotals[e.type] ?? 0) + Number(e.amount); });
@@ -112,7 +130,8 @@ function Admin() {
 
     return { grossRevenue, netRevenue, totalDiscounts, totalExpenses, netProfit, aov, margin,
       discountImpact, pipelineValue, conversion, newCount, avgRating, last7, growth,
-      projected: last30Revenue, bookings: bookings.length, topExpense };
+      projected: last30Revenue, bookings: bookings.length, topExpense,
+      thisMonthRev, lastMonthRev, monthGrowth, uniqueClients, avgSpendPerClient };
   }, [bookings, expenses, inquiries, priceMap, testimonials]);
 
   const trend = useMemo(() => {
