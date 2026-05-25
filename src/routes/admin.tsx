@@ -446,6 +446,9 @@ function KPI({ icon, label, value, accent, tone, hint }: {
 }
 function Empty() {
   return <div className="text-center text-muted-foreground text-sm py-12">No data yet — will appear here as activity comes in.</div>;
+}
+
+
 
 // ─────────── Bookings Tab — pending vs completed ───────────
 function BookingsTab({ inquiries, bookings, setConfirmFor, updateStatus, refresh }: {
