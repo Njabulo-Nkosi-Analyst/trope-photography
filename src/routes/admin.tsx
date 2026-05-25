@@ -372,11 +372,6 @@ function Admin() {
             refresh={refresh}
           />
         )}
-                {inquiries.length === 0 && <tr><td colSpan={8} className="p-6 text-center text-muted-foreground">No inquiries yet.</td></tr>}
-              </tbody>
-            </table>
-          </div>
-        )}
 
         {tab === "finance" && <FinanceTab bookings={bookings} expenses={expenses} expensesByBooking={expensesByBooking} stats={stats} qc={qc} />}
         {tab === "alerts" && <AlertsTab notifications={notifications} qc={qc} />}
