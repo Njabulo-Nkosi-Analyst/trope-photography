@@ -156,8 +156,6 @@ function Home() {
         </div>
       </section>
 
-      {/* CTA */}
-      <section className="max-w-7xl mx-auto px-5 lg:px-8 mt-24">
       {/* CTA + Sign in / Contact */}
       <section className="max-w-7xl mx-auto px-5 lg:px-8 mt-24 mb-16">
         <div className="grid lg:grid-cols-2 gap-6">
