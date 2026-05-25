@@ -234,10 +234,18 @@ function Admin() {
           <>
             {/* KPI cards */}
             <div className="mt-8 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
-              <KPI icon={<PiggyBank size={18}/>} label="Net profit" value={`R${stats.netProfit.toLocaleString()}`} accent />
+              <KPI icon={<PiggyBank size={18}/>} label="Net profit" value={`R${stats.netProfit.toLocaleString()}`}
+                accent tone={stats.netProfit < 0 ? "loss" : "good"}
+                hint={stats.netProfit < 0 ? "⚠ Running at a loss — review expenses" : undefined} />
+              <KPI icon={<TrendingUp size={18}/>} label="Month growth" value={`${stats.monthGrowth >= 0 ? "+" : ""}${stats.monthGrowth.toFixed(1)}%`}
+                tone={stats.monthGrowth < 0 ? "loss" : stats.monthGrowth > 0 ? "good" : "neutral"}
+                hint={`This month R${stats.thisMonthRev.toLocaleString()} vs last R${stats.lastMonthRev.toLocaleString()}`} />
+              <KPI icon={<Users size={18}/>} label="Avg spend / client" value={`R${Math.round(stats.avgSpendPerClient).toLocaleString()}`}
+                hint={`${stats.uniqueClients} unique client${stats.uniqueClients === 1 ? "" : "s"} — useful for pricing`} />
+              <KPI icon={<Percent size={18}/>} label="Avg margin" value={`${stats.margin.toFixed(1)}%`}
+                tone={stats.margin < 0 ? "loss" : stats.margin > 30 ? "good" : "neutral"} />
               <KPI icon={<DollarSign size={18}/>} label="Net revenue" value={`R${stats.netRevenue.toLocaleString()}`} />
               <KPI icon={<TrendingDown size={18}/>} label="Expenses" value={`R${stats.totalExpenses.toLocaleString()}`} />
-              <KPI icon={<Percent size={18}/>} label="Avg margin" value={`${stats.margin.toFixed(1)}%`} />
               <KPI icon={<Tag size={18}/>} label="Discount impact" value={`-R${stats.totalDiscounts.toLocaleString()} (${stats.discountImpact.toFixed(1)}%)`} />
               <KPI icon={<Target size={18}/>} label="Avg order value" value={`R${Math.round(stats.aov).toLocaleString()}`} />
               <KPI icon={<Activity size={18}/>} label="Pipeline value" value={`R${stats.pipelineValue.toLocaleString()}`} />
