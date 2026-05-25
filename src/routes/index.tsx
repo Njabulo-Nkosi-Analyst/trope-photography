@@ -72,8 +72,9 @@ function Home() {
               Your story<br />
               in <span className="italic text-gradient-warm">natural light</span><span className="text-primary">.</span>
             </h1>
-            <p className="mt-6 text-base md:text-lg text-muted-foreground max-w-xl">
-              We capture the true essence of life through our lens — joyous weddings, fun lifestyle sessions, sport, and memorable events. Timeless visuals you'll treasure forever.
+            <p className="mt-4 text-sm uppercase tracking-[0.3em] text-primary/90 font-semibold">Your Story In Natural Light</p>
+            <p className="mt-5 text-base md:text-lg text-muted-foreground max-w-xl">
+              At TANN Photography, we capture the true essence of life through our lens — from joyous weddings to fun lifestyle sessions and memorable events, we create timeless visuals you'll treasure forever.
             </p>
             <div className="mt-8 flex flex-wrap gap-3">
               <Link to="/contact" className="btn-lime px-6 py-3 rounded-full text-sm font-semibold inline-flex items-center gap-2">
