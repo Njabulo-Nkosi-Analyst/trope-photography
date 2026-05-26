@@ -16,7 +16,7 @@ const schema = z.object({
 }).refine(d => d.password === d.confirm, { path: ["confirm"], message: "Passwords don't match" });
 
 export const Route = createFileRoute("/sign-up")({
-  head: () => ({ meta: [{ title: "Create account — Garlo Studio" }] }),
+  head: () => ({ meta: [{ title: "Create account — TANN Photography" }] }),
   component: SignUp,
 });
 

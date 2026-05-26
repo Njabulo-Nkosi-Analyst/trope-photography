@@ -7,8 +7,8 @@ export function Footer() {
       <div className="max-w-7xl mx-auto px-5 lg:px-8 py-16 grid gap-12 lg:grid-cols-4">
         <div>
           <Link to="/" className="flex items-center gap-2 mb-4">
-            <span className="w-8 h-8 rounded-md grid place-items-center bg-primary text-primary-foreground font-display font-bold">G</span>
-            <span className="font-display text-xl font-bold">Garlo</span>
+            <span className="w-8 h-8 rounded-md grid place-items-center bg-primary text-primary-foreground font-display font-bold">T</span>
+            <span className="font-display text-xl font-bold">TANN</span>
           </Link>
           <p className="text-sm text-muted-foreground max-w-xs">
             Capturing emotions and stories that make life special.
@@ -42,13 +42,13 @@ export function Footer() {
         </div>
         <div>
           <h4 className="font-display text-sm font-semibold mb-4">Get in touch</h4>
-          <p className="text-sm text-muted-foreground">Cape Town, South Africa</p>
-          <p className="text-sm text-muted-foreground">hello@garlostudio.com</p>
-          <p className="text-sm text-muted-foreground">+27 12 345 6789</p>
+          <p className="text-sm text-muted-foreground">Gauteng, South Africa</p>
+          <p className="text-sm text-muted-foreground">@Tann_photography_</p>
+          <p className="text-sm text-muted-foreground">074967968 / 0722516358</p>
         </div>
       </div>
       <div className="border-t border-border py-6 text-center text-xs text-muted-foreground">
-        © {new Date().getFullYear()} <span className="text-primary">Garlo</span> Studio. All rights reserved.
+        © {new Date().getFullYear()} <span className="text-primary">TANN</span> Studio. All rights reserved.
       </div>
     </footer>
   );
