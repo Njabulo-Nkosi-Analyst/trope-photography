@@ -28,7 +28,7 @@ export const Route = createFileRoute("/contact")({
     category: typeof s.category === "string" ? s.category : undefined,
     package: typeof s.package === "string" ? s.package : undefined,
   }),
-  head: () => ({ meta: [{ title: "Book a Session — Garlo Studio" }] }),
+  head: () => ({ meta: [{ title: "Book a Session — TANN Photography" }] }),
   component: Contact,
 });
 
@@ -188,17 +188,17 @@ function Contact() {
                 ))}
               </div>
 
-              <a href="https://wa.me/27714967968" target="_blank" rel="noreferrer" className="panel p-5 flex items-center gap-3 hover:border-primary transition-colors">
+              <a href="https://wa.me/2774967968" target="_blank" rel="noreferrer" className="panel p-5 flex items-center gap-3 hover:border-primary transition-colors">
                 <span className="w-10 h-10 rounded-full bg-primary text-primary-foreground grid place-items-center"><MessageCircle size={18} /></span>
-                <div><div className="text-xs text-muted-foreground">WhatsApp</div><div className="font-semibold text-sm">071 496 7968</div></div>
+                <div><div className="text-xs text-muted-foreground">WhatsApp</div><div className="font-semibold text-sm">074 967 968</div></div>
               </a>
               <a href="mailto:hello@tannphotography.com" className="panel p-5 flex items-center gap-3 hover:border-primary transition-colors">
                 <span className="w-10 h-10 rounded-full bg-primary text-primary-foreground grid place-items-center"><Mail size={18} /></span>
                 <div><div className="text-xs text-muted-foreground">Email</div><div className="font-semibold text-sm">hello@tannphotography.com</div></div>
               </a>
-              <a href="https://instagram.com/tannphotography" target="_blank" rel="noreferrer" className="panel p-5 flex items-center gap-3 hover:border-primary transition-colors">
+              <a href="https://instagram.com/Tann_photography_" target="_blank" rel="noreferrer" className="panel p-5 flex items-center gap-3 hover:border-primary transition-colors">
                 <span className="w-10 h-10 rounded-full bg-primary text-primary-foreground grid place-items-center"><Instagram size={18} /></span>
-                <div><div className="text-xs text-muted-foreground">Instagram</div><div className="font-semibold text-sm">@tannphotography</div></div>
+                <div><div className="text-xs text-muted-foreground">Instagram</div><div className="font-semibold text-sm">@Tann_photography_</div></div>
               </a>
             </aside>
           </div>
