@@ -3,7 +3,7 @@ import { Layout } from "@/components/Layout";
 import { Phone } from "lucide-react";
 
 export const Route = createFileRoute("/about")({
-  head: () => ({ meta: [{ title: "About — Garlo Studio" }] }),
+  head: () => ({ meta: [{ title: "About — TANN Photography" }] }),
   component: About,
 });
 
@@ -42,7 +42,7 @@ function About() {
               <span className="w-11 h-11 rounded-full bg-primary text-primary-foreground grid place-items-center"><Phone size={16} /></span>
               <div>
                 <div className="text-xs text-muted-foreground">Need help?</div>
-                <div className="font-semibold text-sm">+27 12 345 6789</div>
+                <div className="font-semibold text-sm">074 967 968 / 072 251 6358</div>
               </div>
             </div>
           </div>
