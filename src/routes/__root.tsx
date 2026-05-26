@@ -38,8 +38,8 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Garlo Studio — Photography that captures your story" },
-      { name: "description", content: "Professional photographer in Cape Town. Weddings, portraits, events, products, maternity, kids and corporate. Book your session today." },
+      { title: "TANN Photography — Your story in natural light" },
+      { name: "description", content: "Professional photographer in Gauteng. Weddings, portraits, events, products, maternity, kids and corporate. Book your session today." },
     ],
     links: [
       { rel: "stylesheet", href: appCss },
