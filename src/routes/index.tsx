@@ -102,7 +102,7 @@ function Home() {
       <section className="max-w-7xl mx-auto px-5 lg:px-8 mt-12 lg:mt-16">
         <div className="grid grid-cols-3 gap-4 border-y border-border py-8">
           {[
-            { n: "25+", l: "Years shooting" },
+            { n: "2+", l: "Year_shooting" },
             { n: "1.2K", l: "Sessions delivered" },
             { n: "4.98★", l: "Avg rating" },
           ].map(s => (
@@ -165,21 +165,17 @@ function Home() {
             </h2>
             <p className="mt-4 text-muted-foreground">Preserve your most valuable moments with TANN Photography, where every shot tells your story.</p>
             <Link to="/contact" className="mt-6 inline-flex btn-lime px-6 py-3 rounded-md text-sm">Start your booking</Link>
-
-            <div className="mt-8 pt-6 border-t border-border grid grid-cols-2 sm:grid-cols-4 gap-2">
-              <a href="tel:074967968" className="flex flex-col items-center gap-1.5 py-3 rounded-lg bg-secondary/50 hover:bg-secondary transition-colors text-xs">
-                <Phone size={16} className="text-primary"/>074 967 968
-              </a>
-              <a href="tel:0722516358" className="flex flex-col items-center gap-1.5 py-3 rounded-lg bg-secondary/50 hover:bg-secondary transition-colors text-xs">
-                <Phone size={16} className="text-primary"/>072 251 6358
-              </a>
-              <a href="https://wa.me/2774967968" target="_blank" rel="noreferrer" className="flex flex-col items-center gap-1.5 py-3 rounded-lg bg-secondary/50 hover:bg-secondary transition-colors text-xs">
-                <MessageCircle size={16} className="text-primary"/>WhatsApp
-              </a>
-              <a href="https://instagram.com/Tann_photography_" target="_blank" rel="noreferrer" className="flex flex-col items-center gap-1.5 py-3 rounded-lg bg-secondary/50 hover:bg-secondary transition-colors text-xs">
-                <Instagram size={16} className="text-primary"/>@Tann_photography_
-              </a>
-            </div>
+<div className="mt-8 pt-6 border-t border-border grid grid-cols-2 sm:grid-cols-3 gap-2">
+  <a href="tel:0714967968" className="flex flex-col items-center gap-1.5 py-3 rounded-lg bg-secondary/50 hover:bg-secondary transition-colors text-xs">
+    <Phone size={16} className="text-primary"/>071 496 7968
+  </a>
+  <a href="https://wa.me/27714967968" target="_blank" rel="noreferrer" className="flex flex-col items-center gap-1.5 py-3 rounded-lg bg-secondary/50 hover:bg-secondary transition-colors text-xs">
+    <MessageCircle size={16} className="text-primary"/>071 496 7968
+  </a>
+  <a href="https://instagram.com/tann_photography_" target="_blank" rel="noreferrer" className="flex flex-col items-center gap-1.5 py-3 rounded-lg bg-secondary/50 hover:bg-secondary transition-colors text-xs">
+    <Instagram size={16} className="text-primary"/>@tann_photography_
+  </a>
+</div>
           </div>
           <HomeAuthPanel />
         </div>

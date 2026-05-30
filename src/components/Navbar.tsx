@@ -65,8 +65,8 @@ export function Navbar() {
             <Heart size={14} className={count > 0 ? "fill-primary text-primary" : ""} /> Favourites {count > 0 && <span className="text-xs text-muted-foreground">({count})</span>}
           </Link>
           <div className="pt-3 border-t border-border grid grid-cols-3 gap-2">
-            <a href="tel:074967968" className="panel p-2 text-center text-xs"><Phone size={14} className="mx-auto mb-1"/>Call</a>
-            <a href="https://wa.me/2774967968" target="_blank" rel="noreferrer" className="panel p-2 text-center text-xs"><MessageCircle size={14} className="mx-auto mb-1"/>WhatsApp</a>
+            <a href="tel:071 496 7968" className="panel p-2 text-center text-xs"><Phone size={14} className="mx-auto mb-1"/>Call</a>
+            <a href="https://wa.me/+27 71 496 7968" target="_blank" rel="noreferrer" className="panel p-2 text-center text-xs"><MessageCircle size={14} className="mx-auto mb-1"/>WhatsApp</a>
             <a href="https://instagram.com/Tann_photography_" target="_blank" rel="noreferrer" className="panel p-2 text-center text-xs"><Instagram size={14} className="mx-auto mb-1"/>Instagram</a>
           </div>
           <div className="pt-3 border-t border-border flex items-center justify-between">

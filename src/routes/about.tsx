@@ -16,7 +16,7 @@ function About() {
           <img src="https://images.unsplash.com/photo-1452587925148-ce544e77e70d?auto=format&fit=crop&w=900&q=80"
             alt="Photographer at work" className="relative w-full aspect-[3/4] object-cover rounded-xl" />
           <div className="absolute -bottom-6 -right-2 lg:right-6 panel bg-primary text-primary-foreground p-5 rounded-xl">
-            <div className="font-display text-4xl font-bold">10+</div>
+            <div className="font-display text-4xl font-bold">2+</div>
             <div className="text-sm font-semibold">Years of Experience</div>
           </div>
         </div>
@@ -29,7 +29,7 @@ function About() {
             We shoot many different types of photography — portrait, landscape, commercial, event and editorial. Each session is approached with care, technical precision and a cinematic eye, so your story is told with the depth it deserves.
           </p>
           <div className="grid grid-cols-3 gap-4 mt-8">
-            {[{ n: "500+", l: "Sessions" }, { n: "12", l: "Cities covered" }, { n: "10+", l: "Years" }].map(s => (
+            {[{ n: "500+", l: "Sessions" }, { n: "6", l: "Cities covered" }, { n: "2+", l: "Years" }].map(s => (
               <div key={s.l} className="panel p-4 text-center">
                 <div className="font-display text-2xl font-bold text-gradient-warm">{s.n}</div>
                 <div className="text-xs text-muted-foreground mt-1">{s.l}</div>
@@ -37,12 +37,12 @@ function About() {
             ))}
           </div>
           <div className="mt-8 flex items-center gap-4 flex-wrap">
-            <Link to="/contact" className="btn-outline-light px-6 py-3 rounded-md text-sm">Hire me</Link>
+            <Link to="/contact" className="btn-outline-light px-6 py-3 rounded-md text-sm">Book Me</Link>
             <div className="flex items-center gap-3">
               <span className="w-11 h-11 rounded-full bg-primary text-primary-foreground grid place-items-center"><Phone size={16} /></span>
               <div>
                 <div className="text-xs text-muted-foreground">Need help?</div>
-                <div className="font-semibold text-sm">074 967 968 / 072 251 6358</div>
+                <div className="font-semibold text-sm">071 496 7968 / 072 251 6358</div>
               </div>
             </div>
           </div>

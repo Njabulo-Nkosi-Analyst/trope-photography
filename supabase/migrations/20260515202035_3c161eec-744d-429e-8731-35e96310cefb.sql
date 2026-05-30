@@ -182,12 +182,11 @@ INSERT INTO public.testimonials (client_name, category, quote, rating) VALUES
 
 -- Seed site settings
 INSERT INTO public.site_settings (key, value) VALUES
-('photographer_name', 'Garlo Studio'),
-('location', 'Cape Town, South Africa'),
-('whatsapp', '+27123456789'),
-('instagram', 'https://instagram.com/garlostudio'),
-('email', 'hello@garlostudio.com'),
-('bio', 'We are many different types of photographers, including portrait, landscape, commercial, event photography, and more. Some photographers specialize in one or two types of photography.');
+('photographer_name', 'Tann '),
+('location', 'Gauteng, South Africa'),
+('whatsapp', '+27 71 496 7968'),
+('instagram', 'https://www.instagram.com/tann_photography_/'),
+('bio', 'Your Story In Natural Light At Tann Photography, We specialize In Capturing The True Essence Of Life Through Our Lens.From Joyous Weddings To Fun Lifestyle Sessions & Memorable Events, We Create Timeless Visuals You Will Treasure Forever.');
 
 -- Storage bucket for gallery
 INSERT INTO storage.buckets (id, name, public) VALUES ('gallery', 'gallery', true);
