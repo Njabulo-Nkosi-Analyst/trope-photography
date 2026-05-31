@@ -8,8 +8,5 @@
     "SUPABASE_URL": "https://sqxdpahegflkgzbljgdz.supabase.co",
     "VITE_SUPABASE_URL": "https://sqxdpahegflkgzbljgdz.supabase.co",
     "VITE_SUPABASE_PROJECT_ID": "sqxdpahegflkgzbljgdz"
-  },
-  "routes": [
-    { "pattern": "tannphotography.njabuloxnkosi12.workers.dev/*", "zone_name": "workers.dev" }
-  ]
+  }
 }
