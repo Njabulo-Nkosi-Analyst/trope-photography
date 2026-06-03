@@ -12,7 +12,7 @@ import { useEffect } from "react";
 const schema = z.object({ email: z.string().email(), password: z.string().min(6) });
 
 export const Route = createFileRoute("/sign-in")({
-  head: () => ({ meta: [{ title: "Sign in — TANN Photography" }] }),
+  head: () => ({ meta: [{ title: "Sign in — Trope Photography" }] }),
   component: SignIn,
 });
 

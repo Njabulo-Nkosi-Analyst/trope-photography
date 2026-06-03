@@ -22,7 +22,7 @@ export function Navbar() {
         <Link to="/" className="flex items-center gap-2.5 leading-none">
           <span className="w-9 h-9 rounded-full grid place-items-center bg-primary text-primary-foreground font-display font-bold text-lg">T</span>
           <span className="flex flex-col">
-            <span className="font-display text-base lg:text-lg font-bold tracking-[0.18em]">TANN</span>
+            <span className="font-display text-base lg:text-lg font-bold tracking-[0.18em]">TROPE</span>
             <span className="text-[10px] uppercase tracking-[0.22em] text-muted-foreground -mt-0.5">Photography</span>
           </span>
         </Link>
@@ -67,7 +67,7 @@ export function Navbar() {
           <div className="pt-3 border-t border-border grid grid-cols-3 gap-2">
             <a href="tel:071 496 7968" className="panel p-2 text-center text-xs"><Phone size={14} className="mx-auto mb-1"/>Call</a>
             <a href="https://wa.me/+27 71 496 7968" target="_blank" rel="noreferrer" className="panel p-2 text-center text-xs"><MessageCircle size={14} className="mx-auto mb-1"/>WhatsApp</a>
-            <a href="https://instagram.com/Tann_photography_" target="_blank" rel="noreferrer" className="panel p-2 text-center text-xs"><Instagram size={14} className="mx-auto mb-1"/>Instagram</a>
+            <a href="https://instagram.com/trope_photography_" target="_blank" rel="noreferrer" className="panel p-2 text-center text-xs"><Instagram size={14} className="mx-auto mb-1"/>Instagram</a>
           </div>
           <div className="pt-3 border-t border-border flex items-center justify-between">
             {user
@@ -106,13 +106,13 @@ function ContactPopover() {
               <span className="w-7 h-7 rounded-full bg-primary/15 text-primary grid place-items-center"><MessageCircle size={13}/></span>
               <span><span className="block font-semibold">WhatsApp</span><span className="text-xs text-muted-foreground">Chat now</span></span>
             </a>
-            <a href="https://instagram.com/Tann_photography_" target="_blank" rel="noreferrer" className="flex items-center gap-3 px-2 py-2 rounded-md hover:bg-secondary transition-colors text-sm">
+            <a href="https://instagram.com/trope_photography_" target="_blank" rel="noreferrer" className="flex items-center gap-3 px-2 py-2 rounded-md hover:bg-secondary transition-colors text-sm">
               <span className="w-7 h-7 rounded-full bg-primary/15 text-primary grid place-items-center"><Instagram size={13}/></span>
-              <span><span className="block font-semibold">Instagram</span><span className="text-xs text-muted-foreground">@Tann_photography_</span></span>
+              <span><span className="block font-semibold">Instagram</span><span className="text-xs text-muted-foreground">@trope_photography_</span></span>
             </a>
-            <a href="mailto:hello@tannphotography.com" className="flex items-center gap-3 px-2 py-2 rounded-md hover:bg-secondary transition-colors text-sm">
+            <a href="mailto:hello@tropephotography.com" className="flex items-center gap-3 px-2 py-2 rounded-md hover:bg-secondary transition-colors text-sm">
               <span className="w-7 h-7 rounded-full bg-primary/15 text-primary grid place-items-center"><Mail size={13}/></span>
-              <span><span className="block font-semibold">Email</span><span className="text-xs text-muted-foreground">hello@tannphotography.com</span></span>
+              <span><span className="block font-semibold">Email</span><span className="text-xs text-muted-foreground">hello@tropephotography.com</span></span>
             </a>
           </div>
         </div>
