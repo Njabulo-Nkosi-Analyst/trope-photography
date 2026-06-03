@@ -12,7 +12,7 @@ const ICONS: Record<string, any> = {
 const ORDER = ["Wedding", "Portrait", "Events", "Product", "Maternity", "Kids", "Corporate"];
 
 export const Route = createFileRoute("/pricing")({
-  head: () => ({ meta: [{ title: "Pricing — TANN Photography" }] }),
+  head: () => ({ meta: [{ title: "Pricing — Trope Photography" }] }),
   component: Pricing,
 });
 

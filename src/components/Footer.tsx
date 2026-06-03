@@ -8,7 +8,7 @@ export function Footer() {
         <div>
           <Link to="/" className="flex items-center gap-2 mb-4">
             <span className="w-8 h-8 rounded-md grid place-items-center bg-primary text-primary-foreground font-display font-bold">T</span>
-            <span className="font-display text-xl font-bold">TANN</span>
+            <span className="font-display text-xl font-bold">TROPE</span>
           </Link>
           <p className="text-sm text-muted-foreground max-w-xs">
             Capturing emotions and stories that make life special.
@@ -43,12 +43,12 @@ export function Footer() {
         <div>
           <h4 className="font-display text-sm font-semibold mb-4">Get in touch</h4>
           <p className="text-sm text-muted-foreground">Gauteng, South Africa</p>
-          <p className="text-sm text-muted-foreground">@Tann_photography_</p>
+          <p className="text-sm text-muted-foreground">@trope_photography_</p>
           <p className="text-sm text-muted-foreground">074967968 / 0722516358</p>
         </div>
       </div>
       <div className="border-t border-border py-6 text-center text-xs text-muted-foreground">
-        © {new Date().getFullYear()} <span className="text-primary">TANN</span> Studio. All rights reserved.
+        © {new Date().getFullYear()} <span className="text-primary">TROPE</span> Studio. All rights reserved.
       </div>
     </footer>
   );

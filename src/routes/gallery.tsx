@@ -21,7 +21,7 @@ const FALLBACK = [
 const TABS = ["All", "Weddings", "Portraits", "Events", "Products", "Maternity", "Kids", "Corporate"];
 
 export const Route = createFileRoute("/gallery")({
-  head: () => ({ meta: [{ title: "Gallery — TANN Photography" }] }),
+  head: () => ({ meta: [{ title: "Gallery — Trope Photography" }] }),
   component: Gallery,
 });
 

@@ -24,7 +24,7 @@ const FEATURED = [
 ];
 
 export const Route = createFileRoute("/")({
-  head: () => ({ meta: [{ title: "TANN Photography — Your story in natural light" }] }),
+  head: () => ({ meta: [{ title: "Trope Photography — Your story in natural light" }] }),
   component: Home,
 });
 
@@ -66,7 +66,7 @@ function Home() {
           <div className="max-w-3xl">
             <div className="flex items-center gap-3 text-xs uppercase tracking-[0.25em] text-muted-foreground">
               <span className="w-10 h-px bg-muted-foreground/60" />
-              TANN Photography · {hero[activeCat]?.category_label}
+              Trope Photography · {hero[activeCat]?.category_label}
             </div>
             <h1 className="mt-6 font-display text-5xl md:text-7xl lg:text-8xl font-bold leading-[0.95]">
               Your story<br />
@@ -74,7 +74,7 @@ function Home() {
             </h1>
             <p className="mt-4 text-sm uppercase tracking-[0.3em] text-primary/90 font-semibold">Your Story In Natural Light</p>
             <p className="mt-5 text-base md:text-lg text-muted-foreground max-w-xl">
-              At TANN Photography, we capture the true essence of life through our lens — from joyous weddings to fun lifestyle sessions and memorable events, we create timeless visuals you'll treasure forever.
+              At Trope Photography, we capture the true essence of life through our lens — from joyous weddings to fun lifestyle sessions and memorable events, we create timeless visuals you'll treasure forever.
             </p>
             <div className="mt-8 flex flex-wrap gap-3">
               <Link to="/contact" className="btn-lime px-6 py-3 rounded-full text-sm font-semibold inline-flex items-center gap-2">
@@ -163,7 +163,7 @@ function Home() {
             <h2 className="font-display text-3xl md:text-5xl font-bold">
               Ready to <span className="text-gradient-warm">create?</span>
             </h2>
-            <p className="mt-4 text-muted-foreground">Preserve your most valuable moments with TANN Photography, where every shot tells your story.</p>
+            <p className="mt-4 text-muted-foreground">Preserve your most valuable moments with Trope Photography, where every shot tells your story.</p>
             <Link to="/contact" className="mt-6 inline-flex btn-lime px-6 py-3 rounded-md text-sm">Start your booking</Link>
 <div className="mt-8 pt-6 border-t border-border grid grid-cols-2 sm:grid-cols-3 gap-2">
   <a href="tel:0714967968" className="flex flex-col items-center gap-1.5 py-3 rounded-lg bg-secondary/50 hover:bg-secondary transition-colors text-xs">

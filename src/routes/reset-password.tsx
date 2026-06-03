@@ -5,7 +5,7 @@ import { AuthShell } from "@/components/AuthShell";
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/reset-password")({
-  head: () => ({ meta: [{ title: "New password — Tann " }] }),
+  head: () => ({ meta: [{ title: "New password — Trope " }] }),
   component: Reset,
 });
 

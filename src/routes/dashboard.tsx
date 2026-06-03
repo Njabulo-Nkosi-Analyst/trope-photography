@@ -9,7 +9,7 @@ import { toast } from "sonner";
 import { LogOut, ArrowRight, ImageIcon } from "lucide-react";
 
 export const Route = createFileRoute("/dashboard")({
-  head: () => ({ meta: [{ title: "Your dashboard — Tann " }] }),
+  head: () => ({ meta: [{ title: "Your dashboard — Trope " }] }),
   component: Dashboard,
 });
 
