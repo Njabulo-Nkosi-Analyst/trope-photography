@@ -6,7 +6,8 @@ import { supabase } from "@/integrations/supabase/client";
 import { lovable } from "@/integrations/lovable/index";
 import { toast } from "sonner";
 import { useAuth } from "@/lib/auth";
-import { ArrowRight, Play, Star, Phone, MessageCircle, Instagram, Mail } from "lucide-react";
+import { QuoteCalculator } from "@/components/QuoteCalculator";
+import { ArrowRight, Play, Star, Phone, MessageCircle, Instagram } from "lucide-react";
 
 const FALLBACK_HERO = [
   { id: "1", url: "https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=1600&q=80", category_label: "Weddings" },
