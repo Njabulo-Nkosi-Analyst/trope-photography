@@ -205,12 +205,16 @@ function Admin() {
     </Layout>
   );
 
+  const pendingReviews = testimonials.filter((t: any) => t.is_approved === false).length;
+  const awaitingDeposits = bookings.filter((b: any) => b.deposit_status === "awaiting" || !b.deposit_status).length;
   const tabs: { id: Tab; label: string; badge?: number }[] = [
     { id: "overview", label: "Overview" },
     { id: "bookings", label: "Bookings", badge: stats.newCount || undefined },
     { id: "finance", label: "Finance" },
     { id: "alerts", label: "Alerts", badge: unreadAlerts || undefined },
     { id: "packages", label: "Packages" },
+    { id: "availability", label: "Availability" },
+    { id: "reviews", label: "Reviews", badge: pendingReviews || undefined },
     { id: "hero", label: "Hero" },
     { id: "gallery", label: "Gallery" },
     { id: "promo", label: "Promo" },
