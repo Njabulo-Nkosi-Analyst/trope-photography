@@ -77,7 +77,8 @@ export function PackagesTab() {
   };
 
   const toggle = async (id: string, field: "is_active" | "is_popular", val: boolean) => {
-    await supabase.from("packages").update({ [field]: val }).eq("id", id);
+    const patch: any = { [field]: val };
+    await supabase.from("packages").update(patch).eq("id", id);
     refresh();
   };
 
