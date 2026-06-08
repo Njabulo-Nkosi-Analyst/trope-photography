@@ -32,7 +32,7 @@ export const Route = createFileRoute("/")({
 function Home() {
   const { data: testimonials = [] } = useQuery({
     queryKey: ["testimonials"],
-    queryFn: async () => (await supabase.from("testimonials").select("*").limit(3)).data ?? [],
+    queryFn: async () => (await supabase.from("testimonials").select("*").eq("is_approved", true).limit(3)).data ?? [],
   });
 
   const { data: hero = FALLBACK_HERO } = useQuery({
