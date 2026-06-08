@@ -385,35 +385,9 @@ function Admin() {
         {tab === "finance" && <FinanceTab bookings={bookings} expenses={expenses} expensesByBooking={expensesByBooking} stats={stats} qc={qc} />}
         {tab === "alerts" && <AlertsTab notifications={notifications} qc={qc} />}
 
-        {tab === "packages" && (
-          <div className="mt-8 panel overflow-x-auto">
-            <table className="w-full text-sm">
-              <thead className="text-xs uppercase text-muted-foreground border-b border-border">
-                <tr><th className="text-left p-3">Category</th><th className="text-left p-3">Name</th><th className="text-left p-3">Price (R)</th><th className="text-left p-3">Cover image</th><th className="text-left p-3">Video URL</th><th className="text-left p-3">Active</th><th className="text-left p-3">Popular</th></tr>
-              </thead>
-              <tbody>
-                {packages.map(p => (
-                  <tr key={p.id} className="border-b border-border/50">
-                    <td className="p-3">{p.category}</td>
-                    <td className="p-3 font-semibold">{p.name}</td>
-                    <td className="p-3"><input type="number" defaultValue={p.price as number} onBlur={e => { const v = Number(e.target.value); if (v !== Number(p.price)) updatePackageField(p.id, { price: v }); }} className="bg-input border border-border rounded px-2 py-1 w-24" /></td>
-                    <td className="p-3">
-                      <div className="flex items-center gap-2">
-                        {p.cover_image_url && <img src={p.cover_image_url} alt="" className="w-10 h-10 rounded object-cover" />}
-                        <input defaultValue={p.cover_image_url ?? ""} onBlur={e => { if (e.target.value !== (p.cover_image_url ?? "")) updatePackageField(p.id, { cover_image_url: e.target.value || null }); }} className="bg-input border border-border rounded px-2 py-1 w-48 text-xs" placeholder="https://..." />
-                      </div>
-                    </td>
-                    <td className="p-3">
-                      <input defaultValue={(p as any).video_url ?? ""} onBlur={e => { if (e.target.value !== ((p as any).video_url ?? "")) updatePackageField(p.id, { video_url: e.target.value || null }); }} className="bg-input border border-border rounded px-2 py-1 w-48 text-xs" placeholder="YouTube/Vimeo/MP4 URL" />
-                    </td>
-                    <td className="p-3"><input type="checkbox" checked={p.is_active} onChange={e => togglePackage(p.id, "is_active", e.target.checked)} /></td>
-                    <td className="p-3"><input type="checkbox" checked={p.is_popular} onChange={e => togglePackage(p.id, "is_popular", e.target.checked)} /></td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        )}
+        {tab === "packages" && <PackagesTab />}
+        {tab === "availability" && <AvailabilityTab />}
+        {tab === "reviews" && <ReviewsTab testimonials={testimonials} qc={qc} />}
 
         {tab === "hero" && <HeroManager hero={hero} qc={qc} />}
         {tab === "gallery" && <GalleryManager gallery={gallery} qc={qc} />}
