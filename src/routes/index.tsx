@@ -176,8 +176,8 @@ function Home() {
   <a href="https://wa.me/27714967968" target="_blank" rel="noreferrer" className="flex flex-col items-center gap-1.5 py-3 rounded-lg bg-secondary/50 hover:bg-secondary transition-colors text-xs">
     <MessageCircle size={16} className="text-primary"/>071 496 7968
   </a>
-  <a href="https://instagram.com/tann_photography_" target="_blank" rel="noreferrer" className="flex flex-col items-center gap-1.5 py-3 rounded-lg bg-secondary/50 hover:bg-secondary transition-colors text-xs">
-    <Instagram size={16} className="text-primary"/>@tann_photography_
+  <a href="https://instagram.com/trope_photography_" target="_blank" rel="noreferrer" className="flex flex-col items-center gap-1.5 py-3 rounded-lg bg-secondary/50 hover:bg-secondary transition-colors text-xs">
+    <Instagram size={16} className="text-primary"/>@trope_photography_
   </a>
 </div>
           </div>
