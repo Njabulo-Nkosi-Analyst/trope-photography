@@ -254,6 +254,12 @@ function Admin() {
               <KPI icon={<Percent size={18}/>} label="Avg margin" value={`${stats.margin.toFixed(1)}%`}
                 tone={stats.margin < 0 ? "loss" : stats.margin > 30 ? "good" : "neutral"} />
               <KPI icon={<DollarSign size={18}/>} label="Net revenue" value={`R${stats.netRevenue.toLocaleString()}`} />
+              <KPI icon={<CreditCard size={18}/>} label="Awaiting deposits"
+                value={awaitingDeposits.toString()}
+                tone={awaitingDeposits > 0 ? "neutral" : "good"}
+                hint={awaitingDeposits > 0 ? "Bookings without deposit received" : "All caught up"} />
+              <KPI icon={<Wallet size={18}/>} label="Deposits this month"
+                value={`R${bookings.filter(b => b.deposit_received_at && new Date(b.deposit_received_at).getMonth() === new Date().getMonth()).reduce((s, b) => s + Number(b.final_price)/2, 0).toLocaleString()}`} />
               <KPI icon={<TrendingDown size={18}/>} label="Expenses" value={`R${stats.totalExpenses.toLocaleString()}`} />
               <KPI icon={<Tag size={18}/>} label="Discount impact" value={`-R${stats.totalDiscounts.toLocaleString()} (${stats.discountImpact.toFixed(1)}%)`} />
               <KPI icon={<Target size={18}/>} label="Avg order value" value={`R${Math.round(stats.aov).toLocaleString()}`} />
