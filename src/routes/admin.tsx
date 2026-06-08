@@ -12,16 +12,19 @@ import {
 import {
   Calendar, DollarSign, Inbox, TrendingUp, Users, CheckCircle2, Clock, Star,
   Image as ImageLucide, Tag, Trash2, Plus, Target, Percent, Activity, Wallet,
-  Bell, Fuel, UserPlus, Receipt, X, TrendingDown, PiggyBank,
+  Bell, Fuel, UserPlus, Receipt, X, TrendingDown, PiggyBank, CalendarDays,
+  MessageCircle, CreditCard, ChevronDown,
 } from "lucide-react";
+import { PackagesTab } from "@/components/admin/PackagesTab";
+import { AvailabilityTab } from "@/components/admin/AvailabilityTab";
+import { TEMPLATES, waLink, type BookingForTemplate } from "@/lib/whatsappTemplates";
 
 export const Route = createFileRoute("/admin")({
   head: () => ({ meta: [{ title: "Admin — Trope Photography" }] }),
   component: Admin,
 });
 
-const PIE_COLORS = ["#c4f04a", "#ff8a65", "#ffb74d", "#7c9cff", "#e879f9", "#34d399", "#fb7185"];
-type Tab = "overview" | "bookings" | "finance" | "alerts" | "packages" | "hero" | "gallery" | "promo";
+type Tab = "overview" | "bookings" | "finance" | "alerts" | "packages" | "availability" | "reviews" | "hero" | "gallery" | "promo";
 
 function Admin() {
   const { user, isAdmin, loading } = useAuth();
