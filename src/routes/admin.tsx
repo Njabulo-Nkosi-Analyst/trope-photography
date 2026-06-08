@@ -485,7 +485,7 @@ function BookingsTab({ inquiries, bookings, setConfirmFor, updateStatus, refresh
               </div>
               <table className="w-full text-sm">
                 <thead className="text-xs uppercase text-muted-foreground border-b border-border">
-                  <tr><th className="text-left p-3">Date</th><th className="text-left p-3">Client</th><th className="text-left p-3">Package</th><th className="text-left p-3">Session</th><th className="text-right p-3">Revenue</th><th className="text-right p-3">Action</th></tr>
+                  <tr><th className="text-left p-3">Date</th><th className="text-left p-3">Client</th><th className="text-left p-3">Package</th><th className="text-left p-3">Session</th><th className="text-left p-3">Payment</th><th className="text-right p-3">Revenue</th><th className="text-right p-3">Actions</th></tr>
                 </thead>
                 <tbody>
                   {active.map(b => (
@@ -493,12 +493,16 @@ function BookingsTab({ inquiries, bookings, setConfirmFor, updateStatus, refresh
                       <td className="p-3 text-muted-foreground whitespace-nowrap">{new Date(b.confirmed_at).toLocaleDateString()}</td>
                       <td className="p-3 font-semibold">{b.client_name}<div className="text-xs text-muted-foreground font-normal">{b.client_email}</div></td>
                       <td className="p-3">{b.package_name}</td>
-                      <td className="p-3 text-muted-foreground">{b.session_date ?? "—"}</td>
+                      <td className="p-3 text-muted-foreground">{b.session_date ?? "—"}{b.session_time ? ` · ${String(b.session_time).slice(0,5)}` : ""}</td>
+                      <td className="p-3"><DepositControls booking={b} onRefresh={() => refresh("all-bookings")} /></td>
                       <td className="p-3 text-right font-semibold">R{Number(b.final_price).toLocaleString()}</td>
                       <td className="p-3 text-right">
-                        <button onClick={() => markComplete(b.id)} className="btn-lime px-3 py-1.5 rounded text-xs font-semibold inline-flex items-center gap-1">
-                          <CheckCircle2 size={12}/> Mark completed
-                        </button>
+                        <div className="flex items-center justify-end gap-1.5">
+                          <WhatsAppMessageMenu booking={b} />
+                          <button onClick={() => markComplete(b.id)} className="btn-lime px-3 py-1.5 rounded text-xs font-semibold inline-flex items-center gap-1">
+                            <CheckCircle2 size={12}/> Complete
+                          </button>
+                        </div>
                       </td>
                     </tr>
                   ))}
