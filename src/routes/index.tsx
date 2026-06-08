@@ -135,6 +135,9 @@ function Home() {
         </div>
       </section>
 
+      {/* Quote Calculator */}
+      <QuoteCalculator embedded />
+
       {/* Testimonials */}
       <section className="max-w-7xl mx-auto px-5 lg:px-8 mt-24">
         <span className="eyebrow">Testimonial</span>
