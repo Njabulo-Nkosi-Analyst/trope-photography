@@ -3,6 +3,7 @@ import { Menu, X, Heart, Phone, MessageCircle, Instagram, Mail } from "lucide-re
 import { useState } from "react";
 import { useAuth } from "@/lib/auth";
 import { useFavourites } from "@/hooks/useFavourites";
+import { TropeLogo } from "@/components/TropeLogo";
 
 const links = [
   { to: "/", label: "Home" },
@@ -19,12 +20,8 @@ export function Navbar() {
   return (
     <header className="sticky top-0 z-50 backdrop-blur-xl bg-background/70 border-b border-border">
       <div className="max-w-7xl mx-auto flex items-center justify-between px-5 lg:px-8 h-16 lg:h-20">
-        <Link to="/" className="flex items-center gap-2.5 leading-none">
-          <span className="w-9 h-9 rounded-full grid place-items-center bg-primary text-primary-foreground font-display font-bold text-lg">T</span>
-          <span className="flex flex-col">
-            <span className="font-display text-base lg:text-lg font-bold tracking-[0.18em]">TROPE</span>
-            <span className="text-[10px] uppercase tracking-[0.22em] text-muted-foreground -mt-0.5">Photography</span>
-          </span>
+        <Link to="/" className="flex items-center leading-none">
+          <TropeLogo />
         </Link>
         <nav className="hidden lg:flex items-center gap-8">
           {links.map(l => (
@@ -40,7 +37,6 @@ export function Navbar() {
             {count > 0 && <span className="absolute -top-2 -right-2 bg-primary text-primary-foreground text-[10px] min-w-[16px] h-[16px] rounded-full px-1 grid place-items-center font-bold">{count}</span>}
           </Link>
 
-          {/* Contact hover button */}
           <ContactPopover />
 
           {user ? (
@@ -65,9 +61,9 @@ export function Navbar() {
             <Heart size={14} className={count > 0 ? "fill-primary text-primary" : ""} /> Favourites {count > 0 && <span className="text-xs text-muted-foreground">({count})</span>}
           </Link>
           <div className="pt-3 border-t border-border grid grid-cols-3 gap-2">
-            <a href="tel:071 496 7968" className="panel p-2 text-center text-xs"><Phone size={14} className="mx-auto mb-1"/>Call</a>
-            <a href="https://wa.me/+27 71 496 7968" target="_blank" rel="noreferrer" className="panel p-2 text-center text-xs"><MessageCircle size={14} className="mx-auto mb-1"/>WhatsApp</a>
-            <a href="https://instagram.com/trope_photography_" target="_blank" rel="noreferrer" className="panel p-2 text-center text-xs"><Instagram size={14} className="mx-auto mb-1"/>Instagram</a>
+            <a href="tel:0608965498" className="panel p-2 text-center text-xs"><Phone size={14} className="mx-auto mb-1"/>Call</a>
+            <a href="https://wa.me/27608965498" target="_blank" rel="noreferrer" className="panel p-2 text-center text-xs"><MessageCircle size={14} className="mx-auto mb-1"/>WhatsApp</a>
+            <a href="https://instagram.com/tropephotography" target="_blank" rel="noreferrer" className="panel p-2 text-center text-xs"><Instagram size={14} className="mx-auto mb-1"/>Instagram</a>
           </div>
           <div className="pt-3 border-t border-border flex items-center justify-between">
             {user
@@ -94,21 +90,21 @@ function ContactPopover() {
         <div className="panel p-3 w-64 shadow-xl">
           <div className="text-[10px] uppercase tracking-widest text-muted-foreground mb-2 font-semibold">Get in touch</div>
           <div className="space-y-1">
-            <a href="tel:074967968" className="flex items-center gap-3 px-2 py-2 rounded-md hover:bg-secondary transition-colors text-sm">
+            <a href="tel:0608965498" className="flex items-center gap-3 px-2 py-2 rounded-md hover:bg-secondary transition-colors text-sm">
               <span className="w-7 h-7 rounded-full bg-primary/15 text-primary grid place-items-center"><Phone size={13}/></span>
-              <span><span className="block font-semibold">Call</span><span className="text-xs text-muted-foreground">074 967 968</span></span>
+              <span><span className="block font-semibold">Call</span><span className="text-xs text-muted-foreground">060 896 5498</span></span>
             </a>
-            <a href="tel:0722516358" className="flex items-center gap-3 px-2 py-2 rounded-md hover:bg-secondary transition-colors text-sm">
+            <a href="tel:0714967968" className="flex items-center gap-3 px-2 py-2 rounded-md hover:bg-secondary transition-colors text-sm">
               <span className="w-7 h-7 rounded-full bg-primary/15 text-primary grid place-items-center"><Phone size={13}/></span>
-              <span><span className="block font-semibold">Call</span><span className="text-xs text-muted-foreground">072 251 6358</span></span>
+              <span><span className="block font-semibold">Call</span><span className="text-xs text-muted-foreground">071 496 7968</span></span>
             </a>
-            <a href="https://wa.me/2774967968" target="_blank" rel="noreferrer" className="flex items-center gap-3 px-2 py-2 rounded-md hover:bg-secondary transition-colors text-sm">
+            <a href="https://wa.me/27608965498" target="_blank" rel="noreferrer" className="flex items-center gap-3 px-2 py-2 rounded-md hover:bg-secondary transition-colors text-sm">
               <span className="w-7 h-7 rounded-full bg-primary/15 text-primary grid place-items-center"><MessageCircle size={13}/></span>
               <span><span className="block font-semibold">WhatsApp</span><span className="text-xs text-muted-foreground">Chat now</span></span>
             </a>
-            <a href="https://instagram.com/trope_photography_" target="_blank" rel="noreferrer" className="flex items-center gap-3 px-2 py-2 rounded-md hover:bg-secondary transition-colors text-sm">
+            <a href="https://instagram.com/tropephotography" target="_blank" rel="noreferrer" className="flex items-center gap-3 px-2 py-2 rounded-md hover:bg-secondary transition-colors text-sm">
               <span className="w-7 h-7 rounded-full bg-primary/15 text-primary grid place-items-center"><Instagram size={13}/></span>
-              <span><span className="block font-semibold">Instagram</span><span className="text-xs text-muted-foreground">@trope_photography_</span></span>
+              <span><span className="block font-semibold">Instagram</span><span className="text-xs text-muted-foreground">@tropephotography</span></span>
             </a>
             <a href="mailto:hello@tropephotography.com" className="flex items-center gap-3 px-2 py-2 rounded-md hover:bg-secondary transition-colors text-sm">
               <span className="w-7 h-7 rounded-full bg-primary/15 text-primary grid place-items-center"><Mail size={13}/></span>
