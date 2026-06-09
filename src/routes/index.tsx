@@ -103,8 +103,8 @@ function Home() {
       <section className="max-w-7xl mx-auto px-5 lg:px-8 mt-12 lg:mt-16">
         <div className="grid grid-cols-3 gap-4 border-y border-border py-8">
           {[
-            { n: "2+", l: "Year_shooting" },
-            { n: "1.2K", l: "Sessions delivered" },
+            { n: "5+", l: "Years shooting" },
+            { n: "500+", l: "Sessions delivered" },
             { n: "4.98★", l: "Avg rating" },
           ].map(s => (
             <div key={s.l}>
@@ -148,7 +148,7 @@ function Home() {
           {testimonials.map(t => (
             <div key={t.id} className="panel p-6">
               <div className="flex gap-0.5 mb-3">
-                {Array.from({ length: t.rating }).map((_, i) => <Star key={i} size={14} className="fill-primary text-primary" />)}
+                {Array.from({ length: t.rating }).map((_, i) => <Star key={i} size={14} className="fill-amber-400 text-amber-400" />)}
               </div>
               <p className="text-sm text-muted-foreground leading-relaxed">"{t.quote}"</p>
               <div className="mt-4 pt-4 border-t border-border">
@@ -170,14 +170,14 @@ function Home() {
             <p className="mt-4 text-muted-foreground">Preserve your most valuable moments with Trope Photography, where every shot tells your story.</p>
             <Link to="/contact" className="mt-6 inline-flex btn-lime px-6 py-3 rounded-md text-sm">Start your booking</Link>
 <div className="mt-8 pt-6 border-t border-border grid grid-cols-2 sm:grid-cols-3 gap-2">
-  <a href="tel:0714967968" className="flex flex-col items-center gap-1.5 py-3 rounded-lg bg-secondary/50 hover:bg-secondary transition-colors text-xs">
-    <Phone size={16} className="text-primary"/>071 496 7968
+  <a href="tel:0608965498" className="flex flex-col items-center gap-1.5 py-3 rounded-lg bg-secondary/50 hover:bg-secondary transition-colors text-xs">
+    <Phone size={16} className="text-primary"/>060 896 5498
   </a>
-  <a href="https://wa.me/27714967968" target="_blank" rel="noreferrer" className="flex flex-col items-center gap-1.5 py-3 rounded-lg bg-secondary/50 hover:bg-secondary transition-colors text-xs">
-    <MessageCircle size={16} className="text-primary"/>071 496 7968
+  <a href="https://wa.me/27608965498" target="_blank" rel="noreferrer" className="flex flex-col items-center gap-1.5 py-3 rounded-lg bg-secondary/50 hover:bg-secondary transition-colors text-xs">
+    <MessageCircle size={16} className="text-primary"/>WhatsApp
   </a>
-  <a href="https://instagram.com/trope_photography_" target="_blank" rel="noreferrer" className="flex flex-col items-center gap-1.5 py-3 rounded-lg bg-secondary/50 hover:bg-secondary transition-colors text-xs">
-    <Instagram size={16} className="text-primary"/>@trope_photography_
+  <a href="https://instagram.com/tropephotography" target="_blank" rel="noreferrer" className="flex flex-col items-center gap-1.5 py-3 rounded-lg bg-secondary/50 hover:bg-secondary transition-colors text-xs">
+    <Instagram size={16} className="text-primary"/>@tropephotography
   </a>
 </div>
           </div>

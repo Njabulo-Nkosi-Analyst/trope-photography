@@ -27,45 +27,41 @@
   --color-border: var(--border);
   --color-input: var(--input);
   --color-ring: var(--ring);
-  --color-lime: var(--lime);
-  --color-coral: var(--coral);
-  --color-orange: var(--orange);
+  --color-trope-red: var(--trope-red);
   --font-display: var(--font-display);
   --font-body: var(--font-body);
 }
 
 :root {
   --radius: 0.75rem;
-  --background: oklch(0.06 0 0);
+  --background: #0A0A0A;
   --foreground: oklch(0.98 0 0);
   --card: oklch(0.10 0 0);
   --card-foreground: oklch(0.98 0 0);
   --popover: oklch(0.10 0 0);
   --popover-foreground: oklch(0.98 0 0);
-  --primary: oklch(0.88 0.21 125);          /* lime */
-  --primary-foreground: oklch(0.10 0 0);
+  --primary: #E8241A;
+  --primary-foreground: #FFFFFF;
   --secondary: oklch(0.16 0 0);
   --secondary-foreground: oklch(0.98 0 0);
   --muted: oklch(0.14 0 0);
   --muted-foreground: oklch(0.70 0 0);
   --accent: oklch(0.18 0 0);
   --accent-foreground: oklch(0.98 0 0);
-  --destructive: oklch(0.62 0.22 25);
-  --destructive-foreground: oklch(0.98 0 0);
-  --border: oklch(0.20 0 0);
+  --destructive: #E8241A;
+  --destructive-foreground: #FFFFFF;
+  --border: rgba(255,255,255,0.06);
   --input: oklch(0.16 0 0);
-  --ring: oklch(0.88 0.21 125);
+  --ring: #E8241A;
 
-  --lime: oklch(0.88 0.21 125);
-  --coral: oklch(0.80 0.16 25);
-  --orange: oklch(0.80 0.18 55);
+  --trope-red: #E8241A;
 
-  --gradient-warm: linear-gradient(110deg, oklch(0.82 0.16 22) 0%, oklch(0.82 0.18 55) 100%);
+  --gradient-warm: linear-gradient(110deg, #E8241A 0%, #ff5a3c 100%);
   --gradient-card: linear-gradient(180deg, oklch(0.11 0 0) 0%, oklch(0.08 0 0) 100%);
-  --shadow-glow: 0 20px 60px -20px oklch(0.88 0.21 125 / 0.35);
+  --shadow-glow: 0 20px 60px -20px rgba(232,36,26,0.45);
 
-  --font-display: "Bricolage Grotesque", "Plus Jakarta Sans", system-ui, sans-serif;
-  --font-body: "Plus Jakarta Sans", system-ui, sans-serif;
+  --font-display: "Bebas Neue", "Bricolage Grotesque", system-ui, sans-serif;
+  --font-body: "DM Sans", "Plus Jakarta Sans", system-ui, sans-serif;
 }
 
 @layer base {
@@ -74,9 +70,16 @@
     background-color: var(--color-background);
     color: var(--color-foreground);
     font-family: var(--font-body);
+    font-size: 16px;
+    line-height: 1.7;
     -webkit-font-smoothing: antialiased;
   }
-  h1, h2, h3, h4, .font-display { font-family: var(--font-display); letter-spacing: -0.02em; }
+  h1, h2, h3, h4, .font-display {
+    font-family: var(--font-display);
+    letter-spacing: 0.01em;
+    font-weight: 400;
+    line-height: 1.05;
+  }
 }
 
 @layer components {
@@ -90,17 +93,18 @@
     display: inline-flex;
     align-items: center;
     gap: 0.75rem;
-    color: var(--lime);
-    font-size: 0.75rem;
+    color: var(--trope-red);
+    font-family: var(--font-body);
+    font-size: 0.6875rem;
     font-weight: 600;
     letter-spacing: 0.18em;
     text-transform: uppercase;
   }
   .eyebrow::before {
-    content: "";
-    width: 2.5rem;
-    height: 1px;
-    background: var(--lime);
+    content: "—";
+    color: var(--trope-red);
+    font-weight: 700;
+    letter-spacing: 0;
   }
   .panel {
     background: var(--gradient-card);
@@ -108,12 +112,12 @@
     border-radius: var(--radius-lg);
   }
   .btn-lime {
-    background: var(--lime);
-    color: oklch(0.10 0 0);
+    background: var(--trope-red);
+    color: #FFFFFF;
     font-weight: 600;
-    transition: transform .15s ease, box-shadow .15s ease, opacity .15s ease;
+    transition: all .2s ease;
   }
-  .btn-lime:hover { box-shadow: var(--shadow-glow); transform: translateY(-1px); }
+  .btn-lime:hover { box-shadow: var(--shadow-glow); transform: scale(1.02); }
   .btn-outline-light {
     background: oklch(0.98 0 0);
     color: oklch(0.10 0 0);
@@ -124,5 +128,21 @@
     color: oklch(0.98 0 0);
     border: 1px solid var(--border);
     font-weight: 600;
+    transition: all .2s ease;
+  }
+  .btn-ghost-dark:hover { transform: scale(1.02); border-color: var(--trope-red); }
+  .section-divider {
+    height: 1px;
+    background: rgba(232,36,26,0.4);
+    border: 0;
+    margin: 0 auto;
+    max-width: 80rem;
+  }
+  .pulse-cta {
+    animation: tropePulse 3s ease-in-out infinite;
+  }
+  @keyframes tropePulse {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(232,36,26,0.6); }
+    50% { box-shadow: 0 0 0 10px rgba(232,36,26,0); }
   }
 }

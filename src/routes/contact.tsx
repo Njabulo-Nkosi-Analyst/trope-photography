@@ -280,6 +280,16 @@ function Contact() {
               <button disabled={isSubmitting} className="btn-lime px-6 py-3 rounded-md text-sm disabled:opacity-50">
                 {isSubmitting ? "Sending..." : "Send inquiry"}
               </button>
+
+              <div className="mt-4 pt-4 border-t border-border space-y-3 text-xs text-muted-foreground">
+                <div className="panel p-4 bg-primary/5 border-primary/30">
+                  <div className="font-semibold text-foreground mb-1 text-sm">Payment</div>
+                  FNB · W. Maluleka · Acc No. 63052599968
+                </div>
+                <p className="leading-relaxed">
+                  <span className="font-semibold text-foreground">Terms:</span> 50% deposit secures your booking. Balance due on completion. Standard turnaround: 4–5 working days. Next-day express: +R1,000. Travel free within 20km of Durban.
+                </p>
+              </div>
             </form>
 
             <aside className="space-y-4">
@@ -309,17 +319,17 @@ function Contact() {
                 ))}
               </div>
 
-              <a href="https://wa.me/27714967968" target="_blank" rel="noreferrer" className="panel p-5 flex items-center gap-3 hover:border-primary transition-colors">
+              <a href="https://wa.me/27608965498" target="_blank" rel="noreferrer" className="panel p-5 flex items-center gap-3 hover:border-primary transition-colors">
                 <span className="w-10 h-10 rounded-full bg-primary text-primary-foreground grid place-items-center"><MessageCircle size={18} /></span>
-                <div><div className="text-xs text-muted-foreground">WhatsApp</div><div className="font-semibold text-sm">071 496 7968</div></div>
+                <div><div className="text-xs text-muted-foreground">WhatsApp</div><div className="font-semibold text-sm">060 896 5498</div></div>
               </a>
               <a href="mailto:hello@tropephotography.com" className="panel p-5 flex items-center gap-3 hover:border-primary transition-colors">
                 <span className="w-10 h-10 rounded-full bg-primary text-primary-foreground grid place-items-center"><Mail size={18} /></span>
                 <div><div className="text-xs text-muted-foreground">Email</div><div className="font-semibold text-sm">hello@tropephotography.com</div></div>
               </a>
-              <a href="https://instagram.com/trope_photography_" target="_blank" rel="noreferrer" className="panel p-5 flex items-center gap-3 hover:border-primary transition-colors">
+              <a href="https://instagram.com/tropephotography" target="_blank" rel="noreferrer" className="panel p-5 flex items-center gap-3 hover:border-primary transition-colors">
                 <span className="w-10 h-10 rounded-full bg-primary text-primary-foreground grid place-items-center"><Instagram size={18} /></span>
-                <div><div className="text-xs text-muted-foreground">Instagram</div><div className="font-semibold text-sm">@trope_photography_</div></div>
+                <div><div className="text-xs text-muted-foreground">Instagram</div><div className="font-semibold text-sm">@tropephotography</div></div>
               </a>
             </aside>
           </div>

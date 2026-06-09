@@ -12,7 +12,7 @@ export function MobileBookBar() {
         <div className="font-semibold">Ready to book?</div>
         <div className="text-muted-foreground">Free consult · 24h reply</div>
       </div>
-      <Link to="/contact" className="btn-lime px-4 py-2.5 rounded-md text-sm inline-flex items-center gap-2 shrink-0">
+      <Link to="/contact" className="btn-lime pulse-cta px-4 py-2.5 rounded-md text-sm inline-flex items-center gap-2 shrink-0">
         Book Now <ArrowRight size={14} />
       </Link>
     </div>
