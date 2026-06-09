@@ -95,7 +95,7 @@ function ReviewPage() {
               {[1, 2, 3, 4, 5].map(n => (
                 <button key={n} type="button" onClick={() => setRating(n)} onMouseEnter={() => setHover(n)} onMouseLeave={() => setHover(0)}
                   className="p-1 transition-transform hover:scale-110">
-                  <Star size={36} className={n <= (hover || rating) ? "fill-destructive text-destructive" : "text-muted-foreground"} />
+                  <Star size={36} className={n <= (hover || rating) ? "fill-amber-400 text-amber-400" : "text-muted-foreground"} />
                 </button>
               ))}
             </div>
