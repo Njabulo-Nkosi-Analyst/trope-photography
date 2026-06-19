@@ -953,12 +953,18 @@ function GalleryManager({ gallery, qc }: { gallery: any[]; qc: any }) {
 }
 
 function PromoManager({ promo, qc }: { promo: any; qc: any }) {
+  const { data: packages = [] } = useQuery({
+    queryKey: ["all-packages"],
+    queryFn: async () => (await supabase.from("packages").select("id,name,category,price").eq("is_active", true)).data ?? [],
+  });
   const [form, setForm] = useState({
     title: promo?.title ?? "",
     description: promo?.description ?? "",
     discount_label: promo?.discount_label ?? "",
     ends_at: promo?.ends_at ? new Date(promo.ends_at).toISOString().slice(0, 16) : "",
     is_active: promo?.is_active ?? true,
+    package_name: promo?.package_name ?? "",
+    package_category: promo?.package_category ?? "",
   });
   useEffect(() => {
     if (promo) setForm({
@@ -983,18 +989,40 @@ function PromoManager({ promo, qc }: { promo: any; qc: any }) {
     <div className="mt-8 panel p-6 max-w-2xl">
       <h2 className="font-display text-xl font-bold mb-4 flex items-center gap-2"><Tag size={18}/> Sale promotion (shows at top of Gallery)</h2>
       <div className="space-y-3">
-        <input value={form.title} onChange={e => setForm({ ...form, title: e.target.value })} placeholder="Title" className="bg-input border border-border rounded px-3 py-2 text-sm w-full" />
-        <textarea value={form.description} onChange={e => setForm({ ...form, description: e.target.value })} placeholder="Short description" rows={3} className="bg-input border border-border rounded px-3 py-2 text-sm w-full" />
-        <div className="grid md:grid-cols-2 gap-3">
-          <input value={form.discount_label} onChange={e => setForm({ ...form, discount_label: e.target.value })} placeholder="Discount label (e.g. -20%)" className="bg-input border border-border rounded px-3 py-2 text-sm" />
-          <input type="datetime-local" value={form.ends_at} onChange={e => setForm({ ...form, ends_at: e.target.value })} className="bg-input border border-border rounded px-3 py-2 text-sm" />
-        </div>
-        <label className="flex items-center gap-2 text-sm"><input type="checkbox" checked={form.is_active} onChange={e => setForm({ ...form, is_active: e.target.checked })} /> Active</label>
-        <div className="flex gap-2">
-          <button onClick={save} className="btn-lime px-5 py-2 rounded text-sm">{promo ? "Update" : "Create"} promotion</button>
-          {promo && <button onClick={remove} className="px-4 py-2 rounded text-sm text-destructive border border-destructive/40 hover:bg-destructive/10 inline-flex items-center gap-1"><Trash2 size={14}/> Delete</button>}
-        </div>
+  <input value={form.title} onChange={e => setForm({ ...form, title: e.target.value })} placeholder="Banner title (e.g. Weekend Special 🔥)" className="bg-input border border-border rounded px-3 py-2 text-sm w-full" />
+  <textarea value={form.description} onChange={e => setForm({ ...form, description: e.target.value })} placeholder="Short description (e.g. Book a portrait session this weekend and save!)" rows={3} className="bg-input border border-border rounded px-3 py-2 text-sm w-full" />
+  <div className="grid md:grid-cols-2 gap-3">
+    <input value={form.discount_label} onChange={e => setForm({ ...form, discount_label: e.target.value })} placeholder="Discount label (e.g. Save 20%)" className="bg-input border border-border rounded px-3 py-2 text-sm" />
+    <input type="datetime-local" value={form.ends_at} onChange={e => setForm({ ...form, ends_at: e.target.value })} className="bg-input border border-border rounded px-3 py-2 text-sm" />
+  </div>
+
+  {/* Package link */}
+  <div>
+    <div className="text-xs text-muted-foreground mb-1.5 font-medium">Link to a package (optional) — clicking the banner takes clients straight to booking</div>
+    <select value={form.package_name} onChange={e => {
+      const pkg = packages.find((p: any) => p.name === e.target.value);
+      setForm({ ...form, package_name: e.target.value, package_category: pkg?.category ?? "" });
+    }} className="bg-input border border-border rounded px-3 py-2 text-sm w-full">
+      <option value="">— No package link (just show banner) —</option>
+      {packages.map((p: any) => (
+        <option key={p.id} value={p.name}>{p.category} · {p.name} — R{Number(p.price).toLocaleString()}</option>
+      ))}
+    </select>
+    {form.package_name && (
+      <div className="mt-1.5 text-xs text-primary bg-primary/10 border border-primary/20 rounded px-3 py-2">
+        ✓ Clicking banner → auto-fills "{form.package_name}" in booking form
       </div>
+    )}
+  </div>
+
+  <label className="flex items-center gap-2 text-sm">
+    <input type="checkbox" checked={form.is_active} onChange={e => setForm({ ...form, is_active: e.target.checked })} /> Active (shows on website)
+  </label>
+  <div className="flex gap-2">
+    <button onClick={save} className="btn-lime px-5 py-2 rounded text-sm">{promo ? "Update" : "Create"} promotion</button>
+    {promo && <button onClick={remove} className="px-4 py-2 rounded text-sm text-destructive border border-destructive/40 hover:bg-destructive/10 inline-flex items-center gap-1"><Trash2 size={14}/> Delete</button>}
+  </div>
+</div>
     </div>
   );
 }

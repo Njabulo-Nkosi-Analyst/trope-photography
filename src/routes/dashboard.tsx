@@ -29,14 +29,12 @@ function Dashboard() {
     enabled: !!user,
   });
 
-  // Pull all packages so we can map package_interest -> cover image
   const { data: packages = [] } = useQuery({
     queryKey: ["packages-cover"],
     queryFn: async () => (await supabase.from("packages").select("id, name, category, cover_image_url, price, duration").eq("is_active", true)).data ?? [],
   });
   const pkgByName = new Map(packages.map(p => [p.name, p]));
 
-  // Gallery thumbs grouped by category (fallback when package has no cover)
   const { data: galleryByCategory = {} } = useQuery({
     queryKey: ["gallery-by-cat"],
     queryFn: async () => {
@@ -79,7 +77,7 @@ function Dashboard() {
           <div className="lg:col-span-2 panel p-6">
             <h2 className="font-display text-xl font-bold mb-4">Your bookings</h2>
             {inquiries.length === 0 ? (
-              <div className="text-sm text-muted-foreground">No inquiries yet. <Link to="/contact" className="text-primary">Book a session →</Link></div>
+              <div className="text-sm text-muted-foreground">No inquiries yet. <Link to="/contact" search={{}} className="text-primary">Book a session →</Link></div>
             ) : (
               <ul className="space-y-3">
                 {inquiries.map(i => {
@@ -107,7 +105,6 @@ function Dashboard() {
               </ul>
             )}
 
-            {/* View more categories */}
             <div className="mt-6 pt-5 border-t border-border">
               <div className="flex items-center justify-between mb-3">
                 <h3 className="font-semibold">Explore more sessions</h3>

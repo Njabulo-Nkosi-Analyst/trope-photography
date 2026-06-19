@@ -24,6 +24,8 @@ type FormData = z.infer<typeof schema>;
 
 const CATS = ["Wedding", "Portrait", "Events", "Product", "Maternity", "Kids", "Corporate"];
 const DAY_KEYS = ["mon", "tue", "wed", "thu", "fri", "sat", "sun"];
+const DAY_LABELS = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
+const MONTH_NAMES = ["January","February","March","April","May","June","July","August","September","October","November","December"];
 
 export const Route = createFileRoute("/contact")({
   validateSearch: (s: Record<string, unknown>) => ({
@@ -34,6 +36,199 @@ export const Route = createFileRoute("/contact")({
   component: Contact,
 });
 
+// ─── helpers ────────────────────────────────────────────────────────────────
+function toISO(y: number, m: number, d: number) {
+  return `${y}-${String(m + 1).padStart(2, "0")}-${String(d).padStart(2, "0")}`;
+}
+
+function getDayStatus(
+  iso: string,
+  todayISO: string,
+  blocksMap: Record<string, any>,
+  workingDays: Record<string, boolean>
+) {
+  if (iso < todayISO) return "past";
+  const block = blocksMap[iso];
+  if (block) return block.is_available ? "available" : "blocked";
+  const d = new Date(iso + "T00:00:00");
+  const dayKey = DAY_KEYS[(d.getDay() + 6) % 7];
+  return workingDays[dayKey] ? "available" : "blocked";
+}
+
+function getNextAvailableDate(
+  fromISO: string,
+  blocksMap: Record<string, any>,
+  workingDays: Record<string, boolean>,
+  todayISO: string
+): string | null {
+  const start = new Date(fromISO + "T00:00:00");
+  start.setDate(start.getDate() + 1);
+  for (let i = 0; i < 60; i++) {
+    const iso = start.toISOString().slice(0, 10);
+    const status = getDayStatus(iso, todayISO, blocksMap, workingDays);
+    if (status === "available") return iso;
+    start.setDate(start.getDate() + 1);
+  }
+  return null;
+}
+
+// ─── Mini Calendar ───────────────────────────────────────────────────────────
+function AvailabilityCalendar({
+  blocks, workingDays, onSelectDate, selectedDate,
+}: {
+  blocks: any[];
+  workingDays: Record<string, boolean>;
+  onSelectDate: (date: string) => void;
+  selectedDate: string;
+}) {
+  const today = new Date();
+  const todayISO = today.toISOString().slice(0, 10);
+  const [calYear, setCalYear] = useState(today.getFullYear());
+  const [calMonth, setCalMonth] = useState(today.getMonth());
+
+  const blocksMap = useMemo(
+    () => Object.fromEntries(blocks.map((b: any) => [b.block_date, b])),
+    [blocks]
+  );
+
+  const daysInMonth = new Date(calYear, calMonth + 1, 0).getDate();
+  const firstDay = (() => {
+    const d = new Date(calYear, calMonth, 1).getDay();
+    return (d + 6) % 7;
+  })();
+
+  const prevMonth = () => {
+    if (calMonth === 0) { setCalYear(y => y - 1); setCalMonth(11); }
+    else setCalMonth(m => m - 1);
+  };
+  const nextMonth = () => {
+    if (calMonth === 11) { setCalYear(y => y + 1); setCalMonth(0); }
+    else setCalMonth(m => m + 1);
+  };
+
+  const isPrevDisabled = calYear === today.getFullYear() && calMonth === today.getMonth();
+
+  return (
+    <div className="border border-border rounded-lg p-4 bg-background/50 mb-3">
+      {/* Header */}
+      <div className="flex items-center justify-between mb-3">
+        <button type="button" onClick={prevMonth} disabled={isPrevDisabled}
+          className="w-7 h-7 rounded-full border border-border grid place-items-center hover:border-primary transition-colors text-muted-foreground disabled:opacity-30 disabled:cursor-not-allowed">
+          ‹
+        </button>
+        <span className="text-sm font-semibold">{MONTH_NAMES[calMonth]} {calYear}</span>
+        <button type="button" onClick={nextMonth}
+          className="w-7 h-7 rounded-full border border-border grid place-items-center hover:border-primary transition-colors text-muted-foreground">
+          ›
+        </button>
+      </div>
+
+      {/* Legend */}
+      <div className="flex flex-wrap gap-3 mb-3 text-[10px] text-muted-foreground">
+        <span className="flex items-center gap-1">
+          <span className="w-2.5 h-2.5 rounded-sm bg-primary/60 inline-block" />Available
+        </span>
+        <span className="flex items-center gap-1">
+          <span className="w-2.5 h-2.5 rounded-sm bg-destructive/40 inline-block" />Unavailable
+        </span>
+        <span className="flex items-center gap-1">
+          <span className="w-2.5 h-2.5 rounded-sm bg-primary inline-block ring-2 ring-primary" />Selected
+        </span>
+      </div>
+
+      {/* Day headers */}
+      <div className="grid grid-cols-7 gap-0.5 mb-1">
+        {DAY_LABELS.map(d => (
+          <div key={d} className="text-center text-[10px] font-semibold text-muted-foreground py-1">{d}</div>
+        ))}
+      </div>
+
+      {/* Calendar grid */}
+      <div className="grid grid-cols-7 gap-0.5">
+        {Array.from({ length: firstDay }).map((_, i) => <div key={`e-${i}`} />)}
+        {Array.from({ length: daysInMonth }).map((_, i) => {
+          const day = i + 1;
+          const iso = toISO(calYear, calMonth, day);
+          const status = getDayStatus(iso, todayISO, blocksMap, workingDays);
+          const isSelected = iso === selectedDate;
+          const isToday = iso === todayISO;
+          const isPast = status === "past";
+          const isBlocked = status === "blocked";
+
+          return (
+            <button key={iso} type="button"
+              disabled={isPast || isBlocked}
+              onClick={() => onSelectDate(iso)}
+              title={isBlocked && !isPast ? "Not available" : undefined}
+              className={`
+                aspect-square rounded-md text-[11px] font-medium transition-all relative
+                ${isPast ? "opacity-20 cursor-not-allowed text-muted-foreground" : ""}
+                ${isBlocked && !isPast ? "bg-destructive/15 text-destructive/60 cursor-not-allowed" : ""}
+                ${status === "available" && !isSelected ? "bg-primary/20 hover:bg-primary/50 text-foreground cursor-pointer hover:scale-105" : ""}
+                ${isSelected ? "bg-primary text-white ring-2 ring-primary ring-offset-1 ring-offset-background scale-110 z-10" : ""}
+                ${isToday && !isSelected ? "ring-1 ring-primary/70" : ""}
+              `}>
+              {day}
+              {isToday && !isSelected && (
+                <span className="absolute bottom-0.5 left-1/2 -translate-x-1/2 w-1 h-1 rounded-full bg-primary" />
+              )}
+            </button>
+          );
+        })}
+      </div>
+
+      {/* Selected date + next available suggestion */}
+      {selectedDate && (() => {
+        const status = getDayStatus(selectedDate, todayISO, blocksMap, workingDays);
+        const nextAvail = status !== "available"
+          ? getNextAvailableDate(selectedDate, blocksMap, workingDays, todayISO)
+          : null;
+        const block = blocksMap[selectedDate];
+        const reason = block?.note || "Not available this day";
+
+        return (
+          <div className="mt-3 pt-3 border-t border-border space-y-2">
+            {status === "available" ? (
+              <div className="text-xs text-center">
+                <span className="text-primary font-semibold">✓ Available — </span>
+                <span className="text-muted-foreground">
+                  {new Date(selectedDate + "T00:00:00").toLocaleDateString("en-ZA", {
+                    weekday: "long", day: "numeric", month: "long", year: "numeric"
+                  })}
+                </span>
+              </div>
+            ) : (
+              <div className="space-y-2">
+                <div className="text-xs text-center text-destructive bg-destructive/10 border border-destructive/20 rounded-md px-3 py-2">
+                  ✗ Not available on {new Date(selectedDate + "T00:00:00").toLocaleDateString("en-ZA", {
+                    weekday: "long", day: "numeric", month: "long"
+                  })} — {reason}
+                </div>
+                {nextAvail && (
+                  <div className="text-xs text-center bg-primary/10 border border-primary/20 rounded-md px-3 py-2">
+                    <span className="text-muted-foreground">Next available: </span>
+                    <button type="button" onClick={() => {
+                      onSelectDate(nextAvail);
+                      const d = new Date(nextAvail + "T00:00:00");
+                      setCalYear(d.getFullYear());
+                      setCalMonth(d.getMonth());
+                    }} className="text-primary font-semibold hover:underline">
+                      {new Date(nextAvail + "T00:00:00").toLocaleDateString("en-ZA", {
+                        weekday: "long", day: "numeric", month: "long", year: "numeric"
+                      })} →
+                    </button>
+                  </div>
+                )}
+              </div>
+            )}
+          </div>
+        );
+      })()}
+    </div>
+  );
+}
+
+// ─── Main Component ──────────────────────────────────────────────────────────
 function Contact() {
   const { user } = useAuth();
   const search = Route.useSearch();
@@ -57,10 +252,11 @@ function Contact() {
   });
 
   const workingDays = useMemo(() => {
-    try { return JSON.parse(settings.find(s => s.key === "working_days")?.value ?? "{}"); } catch { return {}; }
+    try { return JSON.parse(settings.find((s: any) => s.key === "working_days")?.value ?? "{}"); } catch { return {}; }
   }, [settings]);
+
   const defaultSlots = useMemo(() => {
-    try { return JSON.parse(settings.find(s => s.key === "default_slots")?.value ?? "{}"); } catch { return {}; }
+    try { return JSON.parse(settings.find((s: any) => s.key === "default_slots")?.value ?? "{}"); } catch { return {}; }
   }, [settings]);
 
   const { register, handleSubmit, reset, setValue, watch, formState: { errors, isSubmitting } } = useForm<FormData>({
@@ -71,36 +267,47 @@ function Contact() {
   const selectedDate = watch("preferred_date");
   const selectedTime = watch("preferred_time");
 
-  // Real-time subscription for live slot updates on selected date
   const [bookedTimes, setBookedTimes] = useState<string[]>([]);
   useEffect(() => {
     if (!selectedDate) { setBookedTimes([]); return; }
     let cancelled = false;
     (async () => {
-      const { data } = await supabase.from("bookings").select("session_time, status").eq("session_date", selectedDate).in("status", ["pending", "confirmed", "completed"]);
+      const { data } = await supabase.from("bookings").select("session_time, status")
+        .eq("session_date", selectedDate).in("status", ["pending", "confirmed", "completed"]);
       if (cancelled) return;
-      setBookedTimes((data ?? []).map(b => String(b.session_time ?? "").slice(0, 5)).filter(Boolean));
+      setBookedTimes((data ?? []).map((b: any) => String(b.session_time ?? "").slice(0, 5)).filter(Boolean));
     })();
     const ch = supabase.channel("contact-slots")
       .on("postgres_changes", { event: "*", schema: "public", table: "bookings", filter: `session_date=eq.${selectedDate}` },
         async () => {
-          const { data } = await supabase.from("bookings").select("session_time, status").eq("session_date", selectedDate).in("status", ["pending", "confirmed", "completed"]);
-          if (!cancelled) setBookedTimes((data ?? []).map(b => String(b.session_time ?? "").slice(0, 5)).filter(Boolean));
+          const { data } = await supabase.from("bookings").select("session_time, status")
+            .eq("session_date", selectedDate).in("status", ["pending", "confirmed", "completed"]);
+          if (!cancelled) setBookedTimes((data ?? []).map((b: any) => String(b.session_time ?? "").slice(0, 5)).filter(Boolean));
         })
       .subscribe();
     return () => { cancelled = true; supabase.removeChannel(ch); };
   }, [selectedDate]);
 
+  const blocksMap = useMemo(
+    () => Object.fromEntries(blocks.map((b: any) => [b.block_date, b])),
+    [blocks]
+  );
+
   const slotInfoForDate = (dateStr: string) => {
     if (!dateStr) return { slots: [] as string[], blocked: false, reason: "" };
+    const todayISO = new Date().toISOString().slice(0, 10);
     const d = new Date(dateStr + "T00:00:00");
-    if (d < new Date(new Date().toDateString())) return { slots: [], blocked: true, reason: "Past date" };
+    if (dateStr < todayISO) return { slots: [], blocked: true, reason: "Past date" };
     const dayKey = DAY_KEYS[(d.getDay() + 6) % 7];
-    const override = blocks.find(b => b.block_date === dateStr);
+    const override = blocksMap[dateStr];
     let slots: string[] = defaultSlots[dayKey] ?? [];
     let available = workingDays[dayKey] ?? false;
     if (override) {
       available = override.is_available;
+      try {
+        const overrideSlots = JSON.parse(override.slots ?? "[]");
+        if (overrideSlots.length > 0) slots = overrideSlots;
+      } catch { }
     }
     if (!available) return { slots: [], blocked: true, reason: override?.note || "Not available this day" };
     return { slots, blocked: false, reason: "" };
@@ -135,15 +342,12 @@ function Contact() {
 
   const onSubmit = async (d: FormData) => {
     const { error } = await supabase.from("inquiries").insert({
-      name: d.name,
-      email: d.email,
-      whatsapp: d.whatsapp,
-      category: d.category,
-      package_interest: d.package_interest,
-      preferred_date: d.preferred_date || null,
-      message: d.preferred_time ? `${d.message ?? ""}\n\nPreferred time: ${d.preferred_time}${promoMsg?.ok ? `\nPromo: ${promoCode.trim().toUpperCase()}` : ""}` : (d.message ?? "") + (promoMsg?.ok ? `\n\nPromo: ${promoCode.trim().toUpperCase()}` : ""),
-      user_id: user?.id ?? null,
-      status: "new",
+      name: d.name, email: d.email, whatsapp: d.whatsapp, category: d.category,
+      package_interest: d.package_interest, preferred_date: d.preferred_date || null,
+      message: d.preferred_time
+        ? `${d.message ?? ""}\n\nPreferred time: ${d.preferred_time}${promoMsg?.ok ? `\nPromo: ${promoCode.trim().toUpperCase()}` : ""}`
+        : (d.message ?? "") + (promoMsg?.ok ? `\n\nPromo: ${promoCode.trim().toUpperCase()}` : ""),
+      user_id: user?.id ?? null, status: "new",
     });
     if (error) { toast.error("Couldn't send. Please try again."); return; }
     toast.success("Inquiry sent! I'll be in touch within 24 hours.");
@@ -151,15 +355,16 @@ function Contact() {
   };
 
   const grouped = packages.reduce<Record<string, typeof packages>>((acc, p) => {
-    (acc[p.category] ??= []).push(p);
-    return acc;
+    (acc[p.category] ??= []).push(p); return acc;
   }, {});
 
   return (
     <Layout>
       <section className="max-w-7xl mx-auto px-5 lg:px-8 pt-12 lg:pt-20">
         <span className="eyebrow">Book a Session</span>
-        <h1 className="font-display text-5xl md:text-7xl font-bold mt-3">Choose a package, <span className="text-gradient-warm">we'll do the rest.</span></h1>
+        <h1 className="font-display text-5xl md:text-7xl font-bold mt-3">
+          Choose a package, <span className="text-gradient-warm">we'll do the rest.</span>
+        </h1>
         <p className="text-muted-foreground mt-4 max-w-xl">Pick from our offers below — or scroll past and tell us about a custom shoot.</p>
 
         <div className="mt-10 space-y-10">
@@ -175,7 +380,7 @@ function Contact() {
                       R{Number(p.price).toLocaleString()}<span className="text-sm text-muted-foreground font-normal"> / {p.duration}</span>
                     </div>
                     <ul className="mt-4 space-y-1.5 text-sm flex-1">
-                      {((p.features as string[]) ?? []).slice(0, 4).map((f, i) => (
+                      {((p.features as string[]) ?? []).slice(0, 4).map((f: string, i: number) => (
                         <li key={i} className="flex items-start gap-2">
                           <Check size={14} className="text-primary shrink-0 mt-1" />
                           <span className="text-muted-foreground">{f}</span>
@@ -200,14 +405,22 @@ function Contact() {
 
         <div id="booking-form" className="mt-16 scroll-mt-24">
           <span className="eyebrow">Tell us about your shoot</span>
-          <h2 className="font-display text-3xl md:text-5xl font-bold mt-3 mb-8">Send your <span className="text-gradient-warm">inquiry</span></h2>
+          <h2 className="font-display text-3xl md:text-5xl font-bold mt-3 mb-8">
+            Send your <span className="text-gradient-warm">inquiry</span>
+          </h2>
 
           <div className="grid lg:grid-cols-3 gap-8">
             <form onSubmit={handleSubmit(onSubmit)} className="lg:col-span-2 panel p-6 lg:p-8 space-y-4">
               <div className="grid md:grid-cols-2 gap-4">
-                <Field label="Full name" error={errors.name?.message}><input {...register("name")} className="input" /></Field>
-                <Field label="Email" error={errors.email?.message}><input type="email" {...register("email")} className="input" /></Field>
-                <Field label="WhatsApp"><input {...register("whatsapp")} className="input" placeholder="+27 ..." /></Field>
+                <Field label="Full name" error={errors.name?.message}>
+                  <input {...register("name")} className="input" />
+                </Field>
+                <Field label="Email" error={errors.email?.message}>
+                  <input type="email" {...register("email")} className="input" />
+                </Field>
+                <Field label="WhatsApp">
+                  <input {...register("whatsapp")} className="input" placeholder="+27 ..." />
+                </Field>
                 <Field label="Category">
                   <select {...register("category")} className="input">
                     <option value="">Choose</option>
@@ -217,39 +430,44 @@ function Contact() {
                 <Field label="Package interest">
                   <input {...register("package_interest")} className="input" placeholder="e.g. Premium" />
                 </Field>
-                <Field label="Preferred date">
-                  <input type="date" min={new Date().toISOString().slice(0,10)} {...register("preferred_date")} className="input" />
-                </Field>
               </div>
 
+              {/* Availability Calendar */}
+              <Field label="Preferred date">
+                <AvailabilityCalendar
+                  blocks={blocks}
+                  workingDays={workingDays}
+                  onSelectDate={(date) => {
+                    setValue("preferred_date", date);
+                    setValue("preferred_time", "");
+                  }}
+                  selectedDate={selectedDate ?? ""}
+                />
+                <input type="hidden" {...register("preferred_date")} />
+              </Field>
+
               {/* Time slot picker */}
-              {selectedDate && (
+              {selectedDate && !slotInfo.blocked && slotInfo.slots.length > 0 && (
                 <div>
-                  <div className="text-xs text-muted-foreground mb-2 font-medium">Pick a time slot for {new Date(selectedDate + "T00:00:00").toLocaleDateString("en-ZA", { weekday: "long", day: "numeric", month: "long" })}</div>
-                  {slotInfo.blocked ? (
-                    <div className="text-xs text-destructive bg-destructive/10 border border-destructive/30 rounded-md px-3 py-2">
-                      Not available — {slotInfo.reason || "select another date"}.
-                    </div>
-                  ) : slotInfo.slots.length === 0 ? (
-                    <div className="text-xs text-muted-foreground">No default slots set for this day. Add your preferred time in the message below.</div>
-                  ) : (
-                    <div className="flex flex-wrap gap-2">
-                      {slotInfo.slots.map(t => {
-                        const isBooked = bookedTimes.includes(t);
-                        const isSelected = selectedTime === t;
-                        return (
-                          <button key={t} type="button" disabled={isBooked}
-                            onClick={() => setValue("preferred_time", t)}
-                            className={`px-4 py-2 rounded-full text-xs font-semibold border transition-colors
-                              ${isSelected ? "bg-destructive text-destructive-foreground border-destructive" :
-                                isBooked ? "bg-secondary/40 text-muted-foreground border-border line-through cursor-not-allowed opacity-60" :
-                                "bg-background text-foreground border-border hover:border-primary"}`}>
-                            {t}{isBooked && <span className="ml-1.5 text-[9px] opacity-70">Booked</span>}
-                          </button>
-                        );
-                      })}
-                    </div>
-                  )}
+                  <div className="text-xs text-muted-foreground mb-2 font-medium">
+                    Available time slots for {new Date(selectedDate + "T00:00:00").toLocaleDateString("en-ZA", { weekday: "long", day: "numeric", month: "long" })}
+                  </div>
+                  <div className="flex flex-wrap gap-2">
+                    {slotInfo.slots.map(t => {
+                      const isBooked = bookedTimes.includes(t);
+                      const isSelected = selectedTime === t;
+                      return (
+                        <button key={t} type="button" disabled={isBooked}
+                          onClick={() => setValue("preferred_time", t)}
+                          className={`px-4 py-2 rounded-full text-xs font-semibold border transition-colors
+                            ${isSelected ? "bg-primary text-primary-foreground border-primary" :
+                              isBooked ? "bg-secondary/40 text-muted-foreground border-border line-through cursor-not-allowed opacity-60" :
+                              "bg-background text-foreground border-border hover:border-primary"}`}>
+                          {t}{isBooked && <span className="ml-1.5 text-[9px] opacity-70">Booked</span>}
+                        </button>
+                      );
+                    })}
+                  </div>
                 </div>
               )}
 
@@ -261,13 +479,14 @@ function Contact() {
               <div className="border border-border rounded-md">
                 <button type="button" onClick={() => setPromoOpen(o => !o)}
                   className="w-full px-4 py-2.5 text-left flex items-center justify-between text-sm">
-                  <span className="inline-flex items-center gap-2"><Tag size={14}/> Have a promo code?</span>
-                  <ChevronDown size={14} className={`transition-transform ${promoOpen ? "rotate-180" : ""}`}/>
+                  <span className="inline-flex items-center gap-2"><Tag size={14} /> Have a promo code?</span>
+                  <ChevronDown size={14} className={`transition-transform ${promoOpen ? "rotate-180" : ""}`} />
                 </button>
                 {promoOpen && (
                   <div className="px-4 pb-4 pt-1 space-y-2">
                     <div className="flex gap-2">
-                      <input value={promoCode} onChange={e => setPromoCode(e.target.value.toUpperCase())} placeholder="Enter code" className="input flex-1 uppercase" />
+                      <input value={promoCode} onChange={e => setPromoCode(e.target.value.toUpperCase())}
+                        placeholder="Enter code" className="input flex-1 uppercase" />
                       <button type="button" onClick={applyPromo} className="btn-lime px-4 rounded-md text-sm">Apply</button>
                     </div>
                     {promoMsg && (
@@ -319,15 +538,18 @@ function Contact() {
                 ))}
               </div>
 
-              <a href="https://wa.me/27608965498" target="_blank" rel="noreferrer" className="panel p-5 flex items-center gap-3 hover:border-primary transition-colors">
+              <a href="https://wa.me/27608965498" target="_blank" rel="noreferrer"
+                className="panel p-5 flex items-center gap-3 hover:border-primary transition-colors">
                 <span className="w-10 h-10 rounded-full bg-primary text-primary-foreground grid place-items-center"><MessageCircle size={18} /></span>
                 <div><div className="text-xs text-muted-foreground">WhatsApp</div><div className="font-semibold text-sm">060 896 5498</div></div>
               </a>
-              <a href="mailto:hello@tropephotography.com" className="panel p-5 flex items-center gap-3 hover:border-primary transition-colors">
+              <a href="mailto:hello@tropephotography.com"
+                className="panel p-5 flex items-center gap-3 hover:border-primary transition-colors">
                 <span className="w-10 h-10 rounded-full bg-primary text-primary-foreground grid place-items-center"><Mail size={18} /></span>
                 <div><div className="text-xs text-muted-foreground">Email</div><div className="font-semibold text-sm">hello@tropephotography.com</div></div>
               </a>
-              <a href="https://instagram.com/tropephotography" target="_blank" rel="noreferrer" className="panel p-5 flex items-center gap-3 hover:border-primary transition-colors">
+              <a href="https://instagram.com/tropephotography" target="_blank" rel="noreferrer"
+                className="panel p-5 flex items-center gap-3 hover:border-primary transition-colors">
                 <span className="w-10 h-10 rounded-full bg-primary text-primary-foreground grid place-items-center"><Instagram size={18} /></span>
                 <div><div className="text-xs text-muted-foreground">Instagram</div><div className="font-semibold text-sm">@tropephotography</div></div>
               </a>

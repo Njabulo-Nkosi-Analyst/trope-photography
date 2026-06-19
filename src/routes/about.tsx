@@ -37,7 +37,7 @@ function About() {
             ))}
           </div>
           <div className="mt-8 flex items-center gap-4 flex-wrap">
-            <Link to="/contact" className="btn-outline-light px-6 py-3 rounded-md text-sm">Book Me</Link>
+            <Link to="/contact" search={{}} className="btn-outline-light px-6 py-3 rounded-md text-sm">Book Me</Link>
             <div className="flex items-center gap-3">
               <span className="w-11 h-11 rounded-full bg-primary text-primary-foreground grid place-items-center"><Phone size={16} /></span>
               <div>
@@ -51,7 +51,7 @@ function About() {
 
       <section className="max-w-7xl mx-auto px-5 lg:px-8 mt-32 text-center">
         <h2 className="font-display text-4xl md:text-5xl font-bold">Let's <span className="text-gradient-warm">work together.</span></h2>
-        <Link to="/contact" className="mt-6 inline-flex btn-lime px-6 py-3 rounded-md text-sm">Start a project</Link>
+        <Link to="/contact" search={{}} className="mt-6 inline-flex btn-lime px-6 py-3 rounded-md text-sm">Start a project</Link>
       </section>
     </Layout>
   );

@@ -1,8 +1,9 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
+import { useEffect, useState } from "react";
 import { Layout } from "@/components/Layout";
 import { supabase } from "@/integrations/supabase/client";
-import { Check, Camera, Users, Briefcase, Baby, Heart, Smile, Package, Play } from "lucide-react";
+import { Check, Camera, Users, Briefcase, Baby, Heart, Smile, Package, Play, Tag, Clock, X } from "lucide-react";
 
 const ICONS: Record<string, any> = {
   Wedding: Heart, Portrait: Camera, Events: Users, Product: Package,
@@ -15,12 +16,60 @@ export const Route = createFileRoute("/pricing")({
     meta: [
       { title: "Pricing — Trope Photography" },
       { name: "description", content: "Transparent pricing for weddings, portraits, events, product, maternity, kids and corporate photography." },
-      { property: "og:title", content: "Pricing — Trope Photography" },
-      { property: "og:description", content: "Transparent pricing. No hidden costs. Pick a package or build a custom shoot." },
     ],
   }),
   component: Pricing,
 });
+
+function useCountdown(endsAt: string | null) {
+  const calc = () => {
+    if (!endsAt) return null;
+    const diff = new Date(endsAt).getTime() - Date.now();
+    if (diff <= 0) return null;
+    const d = Math.floor(diff / 86400000);
+    const h = Math.floor((diff % 86400000) / 3600000);
+    const m = Math.floor((diff % 3600000) / 60000);
+    const s = Math.floor((diff % 60000) / 1000);
+    return { d, h, m, s };
+  };
+  const [time, setTime] = useState(calc);
+  useEffect(() => { const id = setInterval(() => setTime(calc()), 1000); return () => clearInterval(id); }, [endsAt]);
+  return time;
+}
+
+function PromoBanner({ promo }: { promo: any }) {
+  const [dismissed, setDismissed] = useState(false);
+  const time = useCountdown(promo?.ends_at ?? null);
+  if (!promo || !promo.is_active || dismissed) return null;
+  if (promo.ends_at && new Date(promo.ends_at) < new Date()) return null;
+
+  return (
+    <div className="relative bg-gradient-to-r from-primary/20 via-primary/10 to-primary/20 border border-primary/30 rounded-2xl px-6 py-4 mb-10">
+      <div className="flex items-center justify-between gap-4 flex-wrap">
+        <div className="flex items-center gap-3 flex-wrap">
+          <span className="bg-primary text-primary-foreground text-xs font-bold px-3 py-1.5 rounded-full flex items-center gap-1.5">
+            <Tag size={12} /> {promo.discount_label || "LIMITED OFFER"}
+          </span>
+          <div>
+            <div className="font-semibold">{promo.title}</div>
+            {promo.description && <div className="text-sm text-muted-foreground mt-0.5">{promo.description}</div>}
+          </div>
+        </div>
+        <div className="flex items-center gap-3">
+          {time && (
+            <div className="text-center">
+              <div className="text-[10px] uppercase tracking-wider text-muted-foreground mb-1 flex items-center gap-1"><Clock size={10} /> Ends in</div>
+              <div className="font-mono font-bold text-foreground text-sm">
+                {time.d > 0 && `${time.d}d `}{String(time.h).padStart(2, "0")}:{String(time.m).padStart(2, "0")}:{String(time.s).padStart(2, "0")}
+              </div>
+            </div>
+          )}
+          <button onClick={() => setDismissed(true)} className="text-muted-foreground hover:text-foreground p-1"><X size={14} /></button>
+        </div>
+      </div>
+    </div>
+  );
+}
 
 function Pricing() {
   const { data: packages = [] } = useQuery({
@@ -29,7 +78,12 @@ function Pricing() {
       (await supabase.from("packages").select("*").eq("is_active", true).order("category_sort_order").order("category").order("sort_order")).data ?? [],
   });
 
-  // Group preserving first-seen order (sorted by category_sort_order from query)
+  const { data: promo } = useQuery({
+    queryKey: ["active-promo"],
+    queryFn: async () =>
+      (await supabase.from("promotions").select("*").eq("is_active", true).order("created_at", { ascending: false }).limit(1).maybeSingle()).data,
+  });
+
   const grouped: { cat: string; items: typeof packages }[] = [];
   packages.forEach(p => {
     const g = grouped.find(x => x.cat === p.category);
@@ -47,6 +101,9 @@ function Pricing() {
       </section>
 
       <div className="max-w-7xl mx-auto px-5 lg:px-8 mt-16 space-y-20 pb-20">
+        {/* Promo banner shows at top of packages */}
+        <PromoBanner promo={promo} />
+
         {grouped.map(({ cat, items }) => {
           const Icon = ICONS[cat] ?? Camera;
           return (
@@ -58,11 +115,8 @@ function Pricing() {
                 <div className="w-12 h-12 rounded-lg bg-primary text-primary-foreground grid place-items-center"><Icon size={20} /></div>
                 <h2 className="font-display text-3xl md:text-4xl font-bold">{cat} <span className="text-muted-foreground font-normal text-xl">packages</span></h2>
               </div>
-
               <div className="grid md:grid-cols-3 gap-4">
-                {items.map(p => (
-                  <PackageCard key={p.id} p={p} Icon={Icon} />
-                ))}
+                {items.map(p => <PackageCard key={p.id} p={p} Icon={Icon} />)}
               </div>
             </section>
           );
@@ -85,7 +139,6 @@ function PackageCard({ p, Icon }: { p: any; Icon: any }) {
 
   return (
     <div className={`panel flex flex-col overflow-hidden ${p.is_popular ? "border-destructive ring-1 ring-destructive" : ""}`}>
-      {/* Media header */}
       <div className="aspect-video w-full bg-gradient-to-br from-secondary to-background relative overflow-hidden">
         {mediaUrl && mediaType === "video" ? (
           <video src={mediaUrl} muted loop playsInline autoPlay preload="metadata" poster={p.cover_image_url ?? undefined}
@@ -93,9 +146,7 @@ function PackageCard({ p, Icon }: { p: any; Icon: any }) {
         ) : mediaUrl ? (
           <img src={mediaUrl} alt={p.name} loading="lazy" className="w-full h-full object-cover" />
         ) : (
-          <div className="w-full h-full grid place-items-center text-muted-foreground/40">
-            <Icon size={48} />
-          </div>
+          <div className="w-full h-full grid place-items-center text-muted-foreground/40"><Icon size={48} /></div>
         )}
         {p.is_popular && (
           <div className="absolute top-3 right-3 bg-destructive text-destructive-foreground text-[10px] font-bold uppercase tracking-widest px-2.5 py-1 rounded-full">
@@ -103,7 +154,6 @@ function PackageCard({ p, Icon }: { p: any; Icon: any }) {
           </div>
         )}
       </div>
-
       <div className="p-6 flex flex-col flex-1">
         <div className="font-display text-xl font-bold">{p.name}</div>
         <div className="mt-3 font-display text-4xl font-bold">

@@ -5,6 +5,7 @@ import {
 import { AuthProvider } from "@/lib/auth";
 import { Toaster } from "@/components/ui/sonner";
 import appCss from "../styles.css?url";
+import { useState, useEffect } from "react";
 
 function NotFoundComponent() {
   return (
@@ -55,8 +56,23 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
 });
 
 function RootShell({ children }: { children: React.ReactNode }) {
+  const [theme, setTheme] = useState<"dark" | "light">("dark");
+
+  useEffect(() => {
+    const saved = localStorage.getItem("theme") as "dark" | "light" | null;
+    if (saved) setTheme(saved);
+
+    // Listen for theme changes from the navbar toggle
+    const observer = new MutationObserver(() => {
+      const current = document.documentElement.classList.contains("light") ? "light" : "dark";
+      setTheme(current);
+    });
+    observer.observe(document.documentElement, { attributes: true, attributeFilter: ["class"] });
+    return () => observer.disconnect();
+  }, []);
+
   return (
-    <html lang="en">
+    <html lang="en" className={theme}>
       <head><HeadContent /></head>
       <body>{children}<Scripts /></body>
     </html>

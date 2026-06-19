@@ -5,7 +5,7 @@ import { toast } from "sonner";
 import { Star, Camera, CheckCircle2 } from "lucide-react";
 
 export const Route = createFileRoute("/review/$bookingId")({
-  head: () => ({ meta: [{ title: "Leave a review — Trope Photography" }] }),
+  head: () => ({ meta: [{ title: "Leave a review — Tann Photography" }] }),
   component: ReviewPage,
 });
 

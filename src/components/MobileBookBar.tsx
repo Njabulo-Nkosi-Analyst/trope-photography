@@ -3,7 +3,6 @@ import { ArrowRight } from "lucide-react";
 
 export function MobileBookBar() {
   const { location } = useRouterState();
-  // Hide on contact (already there) and on admin/auth screens
   const hidden = ["/contact", "/sign-in", "/sign-up", "/admin", "/forgot-password", "/reset-password"].some(p => location.pathname.startsWith(p));
   if (hidden) return null;
   return (
@@ -12,7 +11,7 @@ export function MobileBookBar() {
         <div className="font-semibold">Ready to book?</div>
         <div className="text-muted-foreground">Free consult · 24h reply</div>
       </div>
-      <Link to="/contact" className="btn-lime pulse-cta px-4 py-2.5 rounded-md text-sm inline-flex items-center gap-2 shrink-0">
+      <Link to="/contact" search={{}} className="btn-lime pulse-cta px-4 py-2.5 rounded-md text-sm inline-flex items-center gap-2 shrink-0">
         Book Now <ArrowRight size={14} />
       </Link>
     </div>

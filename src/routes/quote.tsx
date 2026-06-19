@@ -5,9 +5,9 @@ import { QuoteCalculator } from "@/components/QuoteCalculator";
 export const Route = createFileRoute("/quote")({
   head: () => ({
     meta: [
-      { title: "Instant Quote — Trope Photography" },
+      { title: "Instant Quote — Tann Photography" },
       { name: "description", content: "Build your photography quote in seconds — no waiting, no email required." },
-      { property: "og:title", content: "Instant Quote — Trope Photography" },
+      { property: "og:title", content: "Instant Quote — Tann Photography" },
       { property: "og:description", content: "Build your photography quote in seconds — no waiting, no email required." },
     ],
   }),

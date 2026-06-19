@@ -89,13 +89,11 @@ function Gallery() {
     return tab === "All" ? list : list.filter(v => v.category === tab || v.category === tab.replace(/s$/, ""));
   }, [packages, tab]);
 
-  // Reset to photos if switching to a category without videos
   useEffect(() => { if (mode === "video" && videos.length === 0) setMode("photos"); }, [videos.length, mode]);
 
   return (
     <Layout>
       <section className="max-w-7xl mx-auto px-5 lg:px-8 pt-12 lg:pt-20">
-        {/* Sale promo banner */}
         {promo && (
           <div className="mb-10 panel p-6 lg:p-8 border-primary bg-gradient-to-br from-primary/15 via-background to-background relative overflow-hidden">
             <div className="absolute top-0 right-0 w-40 h-40 bg-primary/20 rounded-full blur-3xl pointer-events-none" />
@@ -114,7 +112,7 @@ function Gallery() {
               </div>
               <div className="flex flex-col items-end gap-3">
                 <Countdown ends={promo.ends_at} />
-                <Link to="/contact" className="btn-lime px-5 py-2.5 rounded-md text-sm inline-flex items-center gap-2">
+                <Link to="/contact" search={{ category: undefined, package: undefined }} className="btn-lime px-5 py-2.5 rounded-md text-sm inline-flex items-center gap-2">
                   Claim offer <ArrowRight size={14} />
                 </Link>
               </div>
@@ -146,14 +144,13 @@ function Gallery() {
           </div>
           <Link
             to="/contact"
-            search={tab === "All" ? {} : { category: tab.replace(/s$/, "") } as any}
+            search={tab === "All" ? { category: undefined, package: undefined } : { category: tab.replace(/s$/, ""), package: undefined } as any}
             className="btn-lime px-5 py-2.5 rounded-full text-sm whitespace-nowrap inline-flex items-center gap-2"
           >
             Book {tab === "All" ? "a session" : tab.toLowerCase()} <ArrowRight size={14} />
           </Link>
         </div>
 
-        {/* Photos / Video switcher */}
         <div className="mt-6 inline-flex p-1 bg-secondary rounded-full">
           <button onClick={() => setMode("photos")}
             className={`px-4 py-1.5 rounded-full text-xs uppercase tracking-wider inline-flex items-center gap-1.5 transition-all ${mode === "photos" ? "bg-primary text-primary-foreground font-semibold" : "text-muted-foreground"}`}>
@@ -212,13 +209,12 @@ function Gallery() {
           </div>
         )}
 
-        {/* Bottom CTA */}
         <div className="mt-12 panel p-8 text-center">
           <h3 className="font-display text-2xl md:text-3xl font-bold">Like what you see?</h3>
           <p className="text-sm text-muted-foreground mt-2">Book your {tab === "All" ? "session" : tab.toLowerCase() + " session"} today — limited slots each month.</p>
           <Link
             to="/contact"
-            search={tab === "All" ? {} : { category: tab.replace(/s$/, "") } as any}
+            search={tab === "All" ? { category: undefined, package: undefined } : { category: tab.replace(/s$/, ""), package: undefined } as any}
             className="mt-5 inline-flex btn-lime px-6 py-3 rounded-md text-sm items-center gap-2"
           >
             Book now <ArrowRight size={14} />

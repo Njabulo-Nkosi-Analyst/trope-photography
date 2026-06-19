@@ -1,9 +1,9 @@
 import { Link } from "@tanstack/react-router";
-import { Menu, X, Heart, Phone, MessageCircle, Instagram, Mail } from "lucide-react";
-import { useState } from "react";
+import { Menu, X, Heart, Phone, MessageCircle, Instagram, Mail, Sun, Moon } from "lucide-react";
+import { useState, useEffect } from "react";
 import { useAuth } from "@/lib/auth";
 import { useFavourites } from "@/hooks/useFavourites";
-import { TropeLogo } from "@/components/TropeLogo";
+import { Logo } from "@/components/TropeLogo";
 
 const links = [
   { to: "/", label: "Home" },
@@ -12,16 +12,39 @@ const links = [
   { to: "/about", label: "About" },
 ];
 
+function useDarkMode() {
+  const [dark, setDark] = useState(true);
+
+  const toggle = () => {
+    const root = document.documentElement;
+    const isCurrentlyDark = root.classList.contains("dark") || !root.classList.contains("light");
+    if (isCurrentlyDark) {
+      root.classList.remove("dark");
+      root.classList.add("light");
+      localStorage.setItem("theme", "light");
+      setDark(false);
+    } else {
+      root.classList.remove("light");
+      root.classList.add("dark");
+      localStorage.setItem("theme", "dark");
+      setDark(true);
+    }
+  };
+
+  return { dark, toggle };
+}
+
 export function Navbar() {
   const [open, setOpen] = useState(false);
-  const { user, isAdmin } = useAuth();
+  const { user, isAdmin, signOut } = useAuth();
   const { count } = useFavourites();
+  const { dark, toggle } = useDarkMode();
 
   return (
     <header className="sticky top-0 z-50 backdrop-blur-xl bg-background/70 border-b border-border">
       <div className="max-w-7xl mx-auto flex items-center justify-between px-5 lg:px-8 h-16 lg:h-20">
         <Link to="/" className="flex items-center leading-none">
-          <TropeLogo />
+          <Logo />
         </Link>
         <nav className="hidden lg:flex items-center gap-8">
           {links.map(l => (
@@ -37,16 +60,32 @@ export function Navbar() {
             {count > 0 && <span className="absolute -top-2 -right-2 bg-primary text-primary-foreground text-[10px] min-w-[16px] h-[16px] rounded-full px-1 grid place-items-center font-bold">{count}</span>}
           </Link>
 
+          <button
+            onClick={toggle}
+            aria-label="Toggle dark mode"
+            className="w-9 h-9 rounded-full border border-border bg-secondary/60 grid place-items-center text-muted-foreground hover:text-primary hover:border-primary transition-colors"
+          >
+            {dark ? <Sun size={15} /> : <Moon size={15} />}
+          </button>
+
           <ContactPopover />
 
           {user ? (
-            <Link to={isAdmin ? "/admin" : "/dashboard"} className="text-sm text-muted-foreground hover:text-foreground">
-              {isAdmin ? "Admin" : "Dashboard"}
-            </Link>
+            <>
+              <Link to={isAdmin ? "/admin" : "/dashboard"} className="text-sm text-muted-foreground hover:text-foreground transition-colors">
+                {isAdmin ? "Admin" : "Dashboard"}
+              </Link>
+              <button
+                onClick={() => signOut()}
+                className="text-sm text-muted-foreground hover:text-red-500 transition-colors"
+              >
+                Log out
+              </button>
+            </>
           ) : (
-            <Link to="/sign-in" className="text-sm text-muted-foreground hover:text-foreground">Sign in</Link>
+            <Link to="/sign-in" search={{}} className="text-sm text-muted-foreground hover:text-foreground">Sign in</Link>
           )}
-          <Link to="/contact" className="btn-lime px-4 py-2 rounded-md text-sm font-semibold">Book Session</Link>
+          <Link to="/contact" search={{}} className="btn-lime px-4 py-2 rounded-md text-sm font-semibold">Book Session</Link>
         </div>
         <button className="lg:hidden p-2" onClick={() => setOpen(!open)} aria-label="Menu">
           {open ? <X size={20} /> : <Menu size={20} />}
@@ -63,13 +102,32 @@ export function Navbar() {
           <div className="pt-3 border-t border-border grid grid-cols-3 gap-2">
             <a href="tel:0608965498" className="panel p-2 text-center text-xs"><Phone size={14} className="mx-auto mb-1"/>Call</a>
             <a href="https://wa.me/27608965498" target="_blank" rel="noreferrer" className="panel p-2 text-center text-xs"><MessageCircle size={14} className="mx-auto mb-1"/>WhatsApp</a>
-            <a href="https://instagram.com/tropephotography" target="_blank" rel="noreferrer" className="panel p-2 text-center text-xs"><Instagram size={14} className="mx-auto mb-1"/>Instagram</a>
+            <a href="https://instagram.com/tannphotography" target="_blank" rel="noreferrer" className="panel p-2 text-center text-xs"><Instagram size={14} className="mx-auto mb-1"/>Instagram</a>
           </div>
           <div className="pt-3 border-t border-border flex items-center justify-between">
-            {user
-              ? <Link to={isAdmin ? "/admin" : "/dashboard"} onClick={() => setOpen(false)} className="text-sm">{isAdmin ? "Admin" : "Dashboard"}</Link>
-              : <Link to="/sign-in" onClick={() => setOpen(false)} className="text-sm">Sign in</Link>}
-            <Link to="/contact" onClick={() => setOpen(false)} className="btn-lime px-4 py-2 rounded-md text-sm">Book Now</Link>
+            <button
+              onClick={toggle}
+              className="flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors"
+            >
+              {dark ? <Sun size={14} /> : <Moon size={14} />}
+              {dark ? "Light Mode" : "Dark Mode"}
+            </button>
+            {user ? (
+              <>
+                <Link to={isAdmin ? "/admin" : "/dashboard"} onClick={() => setOpen(false)} className="text-sm text-muted-foreground hover:text-foreground">
+                  {isAdmin ? "Admin" : "Dashboard"}
+                </Link>
+                <button
+                  onClick={() => { signOut(); setOpen(false); }}
+                  className="text-sm text-red-500 hover:text-red-400 transition-colors"
+                >
+                  Log out
+                </button>
+              </>
+            ) : (
+              <Link to="/sign-in" search={{}} onClick={() => setOpen(false)} className="text-sm">Sign in</Link>
+            )}
+            <Link to="/contact" search={{}} onClick={() => setOpen(false)} className="btn-lime px-4 py-2 rounded-md text-sm">Book Now</Link>
           </div>
         </div>
       )}
@@ -102,13 +160,13 @@ function ContactPopover() {
               <span className="w-7 h-7 rounded-full bg-primary/15 text-primary grid place-items-center"><MessageCircle size={13}/></span>
               <span><span className="block font-semibold">WhatsApp</span><span className="text-xs text-muted-foreground">Chat now</span></span>
             </a>
-            <a href="https://instagram.com/tropephotography" target="_blank" rel="noreferrer" className="flex items-center gap-3 px-2 py-2 rounded-md hover:bg-secondary transition-colors text-sm">
+            <a href="https://instagram.com/tannphotography" target="_blank" rel="noreferrer" className="flex items-center gap-3 px-2 py-2 rounded-md hover:bg-secondary transition-colors text-sm">
               <span className="w-7 h-7 rounded-full bg-primary/15 text-primary grid place-items-center"><Instagram size={13}/></span>
-              <span><span className="block font-semibold">Instagram</span><span className="text-xs text-muted-foreground">@tropephotography</span></span>
+              <span><span className="block font-semibold">Instagram</span><span className="text-xs text-muted-foreground">@tannphotography</span></span>
             </a>
-            <a href="mailto:hello@tropephotography.com" className="flex items-center gap-3 px-2 py-2 rounded-md hover:bg-secondary transition-colors text-sm">
+            <a href="mailto:hello@tannphotography.com" className="flex items-center gap-3 px-2 py-2 rounded-md hover:bg-secondary transition-colors text-sm">
               <span className="w-7 h-7 rounded-full bg-primary/15 text-primary grid place-items-center"><Mail size={13}/></span>
-              <span><span className="block font-semibold">Email</span><span className="text-xs text-muted-foreground">hello@tropephotography.com</span></span>
+              <span><span className="block font-semibold">Email</span><span className="text-xs text-muted-foreground">hello@tannphotography.com</span></span>
             </a>
           </div>
         </div>

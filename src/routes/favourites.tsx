@@ -66,7 +66,7 @@ function Favourites() {
                   <p className="text-sm text-muted-foreground mt-1">We'll bring this look to your session — just mention your shortlist.</p>
                 </div>
               </div>
-              <Link to="/contact" className="btn-lime px-6 py-3 rounded-md text-sm inline-flex items-center gap-2">
+              <Link to="/contact" search={{}} className="btn-lime px-6 py-3 rounded-md text-sm inline-flex items-center gap-2">
                 Send inquiry <ArrowRight size={14} />
               </Link>
             </div>

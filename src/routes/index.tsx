@@ -7,7 +7,7 @@ import { lovable } from "@/integrations/lovable/index";
 import { toast } from "sonner";
 import { useAuth } from "@/lib/auth";
 import { QuoteCalculator } from "@/components/QuoteCalculator";
-import { ArrowRight, Play, Star, Phone, MessageCircle, Instagram } from "lucide-react";
+import { ArrowRight, Play, Star, Phone, MessageCircle, Instagram, Tag, Clock, X } from "lucide-react";
 
 const FALLBACK_HERO = [
   { id: "1", url: "https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=1600&q=80", category_label: "Weddings" },
@@ -25,9 +25,67 @@ const FEATURED = [
 ];
 
 export const Route = createFileRoute("/")({
-  head: () => ({ meta: [{ title: "Trope Photography — Your story in natural light" }] }),
+  head: () => ({ meta: [{ title: "tann photography — Your story in natural light" }] }),
   component: Home,
 });
+
+function useCountdown(endsAt: string | null) {
+  const calc = () => {
+    if (!endsAt) return null;
+    const diff = new Date(endsAt).getTime() - Date.now();
+    if (diff <= 0) return null;
+    const d = Math.floor(diff / 86400000);
+    const h = Math.floor((diff % 86400000) / 3600000);
+    const m = Math.floor((diff % 3600000) / 60000);
+    const s = Math.floor((diff % 60000) / 1000);
+    return { d, h, m, s };
+  };
+  const [time, setTime] = useState(calc);
+  useEffect(() => {
+    const id = setInterval(() => setTime(calc()), 1000);
+    return () => clearInterval(id);
+  }, [endsAt]);
+  return time;
+}
+
+function PromoBanner({ promo }: { promo: any }) {
+  const [dismissed, setDismissed] = useState(false);
+  const time = useCountdown(promo?.ends_at ?? null);
+
+  if (!promo || !promo.is_active || dismissed) return null;
+  if (promo.ends_at && new Date(promo.ends_at) < new Date()) return null;
+
+  return (
+    <div className="relative bg-gradient-to-r from-primary/20 via-primary/10 to-primary/20 border-b border-primary/30 px-5 py-3">
+      <div className="max-w-7xl mx-auto flex items-center justify-between gap-4 flex-wrap">
+        <div className="flex items-center gap-3 flex-wrap">
+          <span className="bg-primary text-primary-foreground text-xs font-bold px-2.5 py-1 rounded-full flex items-center gap-1">
+            <Tag size={11} /> {promo.discount_label || "SALE"}
+          </span>
+          <div>
+            <span className="font-semibold text-sm">{promo.title}</span>
+            {promo.description && <span className="text-xs text-muted-foreground ml-2">{promo.description}</span>}
+          </div>
+        </div>
+        <div className="flex items-center gap-3">
+          {time && (
+            <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
+              <Clock size={12} />
+              <span className="font-mono font-semibold text-foreground">
+                {time.d > 0 && `${time.d}d `}{String(time.h).padStart(2, "0")}:{String(time.m).padStart(2, "0")}:{String(time.s).padStart(2, "0")}
+              </span>
+              <span>left</span>
+            </div>
+          )}
+          <Link to="/pricing" className="btn-lime px-3 py-1.5 rounded text-xs font-semibold whitespace-nowrap">View packages</Link>
+          <button onClick={() => setDismissed(true)} className="text-muted-foreground hover:text-foreground p-1">
+            <X size={14} />
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
 
 function Home() {
   const { data: testimonials = [] } = useQuery({
@@ -43,6 +101,12 @@ function Home() {
     },
   });
 
+  const { data: promo } = useQuery({
+    queryKey: ["active-promo"],
+    queryFn: async () =>
+      (await supabase.from("promotions").select("*").eq("is_active", true).order("created_at", { ascending: false }).limit(1).maybeSingle()).data,
+  });
+
   const [activeCat, setActiveCat] = useState(0);
   useEffect(() => {
     if (hero.length < 2) return;
@@ -52,22 +116,23 @@ function Home() {
 
   return (
     <Layout>
-      {/* Hero with rotating background (admin-managed) */}
+      <PromoBanner promo={promo} />
+
       <section className="relative overflow-hidden min-h-[85vh]">
         <div className="absolute inset-0">
           {hero.map((c, i) => (
             <img key={c.id} src={c.url} alt={c.category_label} loading={i === 0 ? "eager" : "lazy"}
               className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-1000 ${i === activeCat ? "opacity-100" : "opacity-0"}`} />
           ))}
-          <div className="absolute inset-0 bg-gradient-to-r from-background via-background/85 to-background/30" />
-          <div className="absolute inset-0 bg-gradient-to-t from-background via-transparent to-background/60" />
+          <div className="absolute inset-0" style={{ background: 'linear-gradient(to right, rgba(0,0,0,0.90) 0%, rgba(0,0,0,0.60) 50%, rgba(0,0,0,0.10) 100%)' }} />
+          <div className="absolute inset-0" style={{ background: 'linear-gradient(to top, rgba(0,0,0,0.30) 0%, transparent 70%, rgba(0,0,0,0.05) 100%)' }} />
         </div>
 
         <div className="relative max-w-7xl mx-auto px-5 lg:px-8 pt-16 lg:pt-28 pb-20 lg:pb-32">
           <div className="max-w-3xl">
             <div className="flex items-center gap-3 text-xs uppercase tracking-[0.25em] text-muted-foreground">
               <span className="w-10 h-px bg-muted-foreground/60" />
-              Trope Photography · {hero[activeCat]?.category_label}
+              tann photography · {hero[activeCat]?.category_label}
             </div>
             <h1 className="mt-6 font-display text-5xl md:text-7xl lg:text-8xl font-bold leading-[0.95]">
               Your story<br />
@@ -75,10 +140,10 @@ function Home() {
             </h1>
             <p className="mt-4 text-sm uppercase tracking-[0.3em] text-primary/90 font-semibold">Your Story In Natural Light</p>
             <p className="mt-5 text-base md:text-lg text-muted-foreground max-w-xl">
-              At Trope Photography, we capture the true essence of life through our lens — from joyous weddings to fun lifestyle sessions and memorable events, we create timeless visuals you'll treasure forever.
+              At tann photography, we capture the true essence of life through our lens — from joyous weddings to fun lifestyle sessions and memorable events, we create timeless visuals you'll treasure forever.
             </p>
             <div className="mt-8 flex flex-wrap gap-3">
-              <Link to="/contact" className="btn-lime px-6 py-3 rounded-full text-sm font-semibold inline-flex items-center gap-2">
+              <Link to="/contact" search={{ category: undefined, package: undefined }} className="btn-lime px-6 py-3 rounded-full text-sm font-semibold inline-flex items-center gap-2">
                 Book a Session <ArrowRight size={16} />
               </Link>
               <Link to="/gallery" className="px-6 py-3 rounded-full text-sm bg-secondary/80 backdrop-blur border border-border inline-flex items-center gap-2 hover:bg-secondary">
@@ -99,7 +164,6 @@ function Home() {
         </div>
       </section>
 
-      {/* Stats */}
       <section className="max-w-7xl mx-auto px-5 lg:px-8 mt-12 lg:mt-16">
         <div className="grid grid-cols-3 gap-4 border-y border-border py-8">
           {[
@@ -115,7 +179,6 @@ function Home() {
         </div>
       </section>
 
-      {/* Featured Work */}
       <section className="max-w-7xl mx-auto px-5 lg:px-8 mt-24">
         <div className="flex items-end justify-between flex-wrap gap-4 mb-8">
           <div>
@@ -135,10 +198,8 @@ function Home() {
         </div>
       </section>
 
-      {/* Quote Calculator */}
       <QuoteCalculator embedded />
 
-      {/* Testimonials */}
       <section className="max-w-7xl mx-auto px-5 lg:px-8 mt-24">
         <span className="eyebrow">Testimonial</span>
         <h2 className="font-display text-4xl md:text-6xl font-bold mt-3 mb-10">
@@ -160,26 +221,25 @@ function Home() {
         </div>
       </section>
 
-      {/* CTA + Sign in / Contact */}
       <section className="max-w-7xl mx-auto px-5 lg:px-8 mt-24 mb-16">
         <div className="grid lg:grid-cols-2 gap-6">
           <div className="panel p-8 lg:p-12">
             <h2 className="font-display text-3xl md:text-5xl font-bold">
               Ready to <span className="text-gradient-warm">create?</span>
             </h2>
-            <p className="mt-4 text-muted-foreground">Preserve your most valuable moments with Trope Photography, where every shot tells your story.</p>
-            <Link to="/contact" className="mt-6 inline-flex btn-lime px-6 py-3 rounded-md text-sm">Start your booking</Link>
-<div className="mt-8 pt-6 border-t border-border grid grid-cols-2 sm:grid-cols-3 gap-2">
-  <a href="tel:0608965498" className="flex flex-col items-center gap-1.5 py-3 rounded-lg bg-secondary/50 hover:bg-secondary transition-colors text-xs">
-    <Phone size={16} className="text-primary"/>060 896 5498
-  </a>
-  <a href="https://wa.me/27608965498" target="_blank" rel="noreferrer" className="flex flex-col items-center gap-1.5 py-3 rounded-lg bg-secondary/50 hover:bg-secondary transition-colors text-xs">
-    <MessageCircle size={16} className="text-primary"/>WhatsApp
-  </a>
-  <a href="https://instagram.com/tropephotography" target="_blank" rel="noreferrer" className="flex flex-col items-center gap-1.5 py-3 rounded-lg bg-secondary/50 hover:bg-secondary transition-colors text-xs">
-    <Instagram size={16} className="text-primary"/>@tropephotography
-  </a>
-</div>
+            <p className="mt-4 text-muted-foreground">Preserve your most valuable moments with tann photography, where every shot tells your story.</p>
+            <Link to="/contact" search={{ category: undefined, package: undefined }} className="mt-6 inline-flex btn-lime px-6 py-3 rounded-md text-sm">Start your booking</Link>
+            <div className="mt-8 pt-6 border-t border-border grid grid-cols-2 sm:grid-cols-3 gap-2">
+              <a href="tel:0608965498" className="flex flex-col items-center gap-1.5 py-3 rounded-lg bg-secondary/50 hover:bg-secondary transition-colors text-xs">
+                <Phone size={16} className="text-primary" />060 896 5498
+              </a>
+              <a href="https://wa.me/27608965498" target="_blank" rel="noreferrer" className="flex flex-col items-center gap-1.5 py-3 rounded-lg bg-secondary/50 hover:bg-secondary transition-colors text-xs">
+                <MessageCircle size={16} className="text-primary" />WhatsApp
+              </a>
+              <a href="https://instagram.com/tropephotography" target="_blank" rel="noreferrer" className="flex flex-col items-center gap-1.5 py-3 rounded-lg bg-secondary/50 hover:bg-secondary transition-colors text-xs">
+                <Instagram size={16} className="text-primary" />@tropephotography
+              </a>
+            </div>
           </div>
           <HomeAuthPanel />
         </div>
@@ -239,12 +299,12 @@ function HomeAuthPanel() {
       <p className="text-sm text-muted-foreground mb-5">Save your favourites and re-book in one click.</p>
 
       <button onClick={google} className="w-full panel border-border hover:border-primary transition-colors px-4 py-2.5 rounded-md text-sm flex items-center justify-center gap-2">
-        <svg width="16" height="16" viewBox="0 0 48 48"><path fill="#FFC107" d="M43.6 20.5H42V20H24v8h11.3a12 12 0 01-11.3 8 12 12 0 110-24c3 0 5.8 1.1 7.9 3l5.7-5.7A20 20 0 1024 44a20 20 0 0019.6-23.5z"/><path fill="#FF3D00" d="M6.3 14.7l6.6 4.8A12 12 0 0124 12c3 0 5.8 1.1 7.9 3l5.7-5.7A20 20 0 006.3 14.7z"/><path fill="#4CAF50" d="M24 44c5.2 0 10-2 13.6-5.2l-6.3-5.3A12 12 0 0112.7 28l-6.5 5A20 20 0 0024 44z"/><path fill="#1976D2" d="M43.6 20.5H42V20H24v8h11.3a12 12 0 01-4.1 5.5l6.3 5.3C42.3 36 44 30.5 44 24c0-1.2-.1-2.3-.4-3.5z"/></svg>
+        <svg width="16" height="16" viewBox="0 0 48 48"><path fill="#FFC107" d="M43.6 20.5H42V20H24v8h11.3a12 12 0 01-11.3 8 12 12 0 110-24c3 0 5.8 1.1 7.9 3l5.7-5.7A20 20 0 1024 44a20 20 0 0019.6-23.5z" /><path fill="#FF3D00" d="M6.3 14.7l6.6 4.8A12 12 0 0124 12c3 0 5.8 1.1 7.9 3l5.7-5.7A20 20 0 006.3 14.7z" /><path fill="#4CAF50" d="M24 44c5.2 0 10-2 13.6-5.2l-6.3-5.3A12 12 0 0112.7 28l-6.5 5A20 20 0 0024 44z" /><path fill="#1976D2" d="M43.6 20.5H42V20H24v8h11.3a12 12 0 01-4.1 5.5l6.3 5.3C42.3 36 44 30.5 44 24c0-1.2-.1-2.3-.4-3.5z" /></svg>
         Continue with Google
       </button>
 
       <div className="flex items-center gap-3 my-4 text-[10px] uppercase tracking-widest text-muted-foreground">
-        <span className="flex-1 h-px bg-border"/>or email<span className="flex-1 h-px bg-border"/>
+        <span className="flex-1 h-px bg-border" />or email<span className="flex-1 h-px bg-border" />
       </div>
 
       <form onSubmit={submit} className="space-y-2.5">
