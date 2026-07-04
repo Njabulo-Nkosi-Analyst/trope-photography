@@ -7,8 +7,6 @@ export type Json =
   | Json[]
 
 export type Database = {
-  // Allows to automatically instantiate createClient with right options
-  // instead of createClient<Database, { PostgrestVersion: 'XX' }>(URL, KEY)
   __InternalSupabase: {
     PostgrestVersion: "14.5"
   }
@@ -22,6 +20,7 @@ export type Database = {
           id: string
           is_available: boolean
           note: string | null
+          slots: string | null
           start_time: string | null
         }
         Insert: {
@@ -31,6 +30,7 @@ export type Database = {
           id?: string
           is_available?: boolean
           note?: string | null
+          slots?: string | null
           start_time?: string | null
         }
         Update: {
@@ -40,6 +40,7 @@ export type Database = {
           id?: string
           is_available?: boolean
           note?: string | null
+          slots?: string | null
           start_time?: string | null
         }
         Relationships: []
@@ -87,6 +88,7 @@ export type Database = {
       }
       bookings: {
         Row: {
+          addons_total: number | null
           category: string | null
           client_email: string | null
           client_name: string
@@ -101,17 +103,20 @@ export type Database = {
           fully_paid_at: string | null
           id: string
           inquiry_id: string | null
+          location: string | null
           notes: string | null
           package_name: string | null
           package_price: number
           promo_code: string | null
           promo_discount: number
+          selected_addons: string[] | null
           session_date: string | null
           session_time: string | null
           status: string
           user_id: string | null
         }
         Insert: {
+          addons_total?: number | null
           category?: string | null
           client_email?: string | null
           client_name: string
@@ -126,17 +131,20 @@ export type Database = {
           fully_paid_at?: string | null
           id?: string
           inquiry_id?: string | null
+          location?: string | null
           notes?: string | null
           package_name?: string | null
           package_price?: number
           promo_code?: string | null
           promo_discount?: number
+          selected_addons?: string[] | null
           session_date?: string | null
           session_time?: string | null
           status?: string
           user_id?: string | null
         }
         Update: {
+          addons_total?: number | null
           category?: string | null
           client_email?: string | null
           client_name?: string
@@ -151,11 +159,13 @@ export type Database = {
           fully_paid_at?: string | null
           id?: string
           inquiry_id?: string | null
+          location?: string | null
           notes?: string | null
           package_name?: string | null
           package_price?: number
           promo_code?: string | null
           promo_discount?: number
+          selected_addons?: string[] | null
           session_date?: string | null
           session_time?: string | null
           status?: string
@@ -298,6 +308,7 @@ export type Database = {
           created_at: string
           id: string
           is_featured: boolean
+          media_type: string | null
           sort_order: number
           url: string
         }
@@ -307,6 +318,7 @@ export type Database = {
           created_at?: string
           id?: string
           is_featured?: boolean
+          media_type?: string | null
           sort_order?: number
           url: string
         }
@@ -316,6 +328,7 @@ export type Database = {
           created_at?: string
           id?: string
           is_featured?: boolean
+          media_type?: string | null
           sort_order?: number
           url?: string
         }
@@ -353,40 +366,67 @@ export type Database = {
       }
       inquiries: {
         Row: {
+          addons_total: number | null
           category: string | null
           created_at: string
+          discount_amount: number
+          discount_label: string | null
           email: string
           id: string
+          location: string | null
           message: string | null
           name: string
+          original_price: number | null
           package_interest: string | null
           preferred_date: string | null
+          promo_code_used: string | null
+          quoted_price: number | null
+          selected_addons: string[] | null
+          session_time: string | null
           status: string
           user_id: string | null
           whatsapp: string | null
         }
         Insert: {
+          addons_total?: number | null
           category?: string | null
           created_at?: string
+          discount_amount?: number
+          discount_label?: string | null
           email: string
           id?: string
+          location?: string | null
           message?: string | null
           name: string
+          original_price?: number | null
           package_interest?: string | null
           preferred_date?: string | null
+          promo_code_used?: string | null
+          quoted_price?: number | null
+          selected_addons?: string[] | null
+          session_time?: string | null
           status?: string
           user_id?: string | null
           whatsapp?: string | null
         }
         Update: {
+          addons_total?: number | null
           category?: string | null
           created_at?: string
+          discount_amount?: number
+          discount_label?: string | null
           email?: string
           id?: string
+          location?: string | null
           message?: string | null
           name?: string
+          original_price?: number | null
           package_interest?: string | null
           preferred_date?: string | null
+          promo_code_used?: string | null
+          quoted_price?: number | null
+          selected_addons?: string[] | null
+          session_time?: string | null
           status?: string
           user_id?: string | null
           whatsapp?: string | null
@@ -438,11 +478,14 @@ export type Database = {
           features: Json
           id: string
           is_active: boolean
+          is_on_sale: boolean
           is_popular: boolean
           media_type: string | null
           media_url: string | null
           name: string
+          perfect_for: string | null
           price: number
+          sale_price: number | null
           sort_order: number
           video_url: string | null
         }
@@ -457,11 +500,14 @@ export type Database = {
           features?: Json
           id?: string
           is_active?: boolean
+          is_on_sale?: boolean
           is_popular?: boolean
           media_type?: string | null
           media_url?: string | null
           name: string
+          perfect_for?: string | null
           price: number
+          sale_price?: number | null
           sort_order?: number
           video_url?: string | null
         }
@@ -476,11 +522,14 @@ export type Database = {
           features?: Json
           id?: string
           is_active?: boolean
+          is_on_sale?: boolean
           is_popular?: boolean
           media_type?: string | null
           media_url?: string | null
           name?: string
+          perfect_for?: string | null
           price?: number
+          sale_price?: number | null
           sort_order?: number
           video_url?: string | null
         }
@@ -563,6 +612,12 @@ export type Database = {
           ends_at: string
           id: string
           is_active: boolean
+          original_price: number | null
+          package_category: string | null
+          package_id: string | null
+          package_name: string | null
+          promo_code: string | null
+          sale_price: number | null
           title: string
         }
         Insert: {
@@ -572,6 +627,12 @@ export type Database = {
           ends_at: string
           id?: string
           is_active?: boolean
+          original_price?: number | null
+          package_category?: string | null
+          package_id?: string | null
+          package_name?: string | null
+          promo_code?: string | null
+          sale_price?: number | null
           title: string
         }
         Update: {
@@ -581,6 +642,12 @@ export type Database = {
           ends_at?: string
           id?: string
           is_active?: boolean
+          original_price?: number | null
+          package_category?: string | null
+          package_id?: string | null
+          package_name?: string | null
+          promo_code?: string | null
+          sale_price?: number | null
           title?: string
         }
         Relationships: []
@@ -778,7 +845,6 @@ export type Database = {
 }
 
 type DatabaseWithoutInternals = Omit<Database, "__InternalSupabase">
-
 type DefaultSchema = DatabaseWithoutInternals[Extract<keyof Database, "public">]
 
 export type Tables<
@@ -791,108 +857,76 @@ export type Tables<
     ? keyof (DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"] &
         DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Views"])
     : never = never,
-> = DefaultSchemaTableNameOrOptions extends {
-  schema: keyof DatabaseWithoutInternals
-}
+> = DefaultSchemaTableNameOrOptions extends { schema: keyof DatabaseWithoutInternals }
   ? (DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"] &
-      DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Views"])[TableName] extends {
-      Row: infer R
-    }
+      DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Views"])[TableName] extends { Row: infer R }
     ? R
     : never
-  : DefaultSchemaTableNameOrOptions extends keyof (DefaultSchema["Tables"] &
-        DefaultSchema["Views"])
-    ? (DefaultSchema["Tables"] &
-        DefaultSchema["Views"])[DefaultSchemaTableNameOrOptions] extends {
-        Row: infer R
-      }
-      ? R
-      : never
+  : DefaultSchemaTableNameOrOptions extends keyof (DefaultSchema["Tables"] & DefaultSchema["Views"])
+  ? (DefaultSchema["Tables"] & DefaultSchema["Views"])[DefaultSchemaTableNameOrOptions] extends { Row: infer R }
+    ? R
     : never
+  : never
 
 export type TablesInsert<
   DefaultSchemaTableNameOrOptions extends
     | keyof DefaultSchema["Tables"]
     | { schema: keyof DatabaseWithoutInternals },
-  TableName extends DefaultSchemaTableNameOrOptions extends {
-    schema: keyof DatabaseWithoutInternals
-  }
+  TableName extends DefaultSchemaTableNameOrOptions extends { schema: keyof DatabaseWithoutInternals }
     ? keyof DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"]
     : never = never,
-> = DefaultSchemaTableNameOrOptions extends {
-  schema: keyof DatabaseWithoutInternals
-}
-  ? DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"][TableName] extends {
-      Insert: infer I
-    }
+> = DefaultSchemaTableNameOrOptions extends { schema: keyof DatabaseWithoutInternals }
+  ? DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"][TableName] extends { Insert: infer I }
     ? I
     : never
   : DefaultSchemaTableNameOrOptions extends keyof DefaultSchema["Tables"]
-    ? DefaultSchema["Tables"][DefaultSchemaTableNameOrOptions] extends {
-        Insert: infer I
-      }
-      ? I
-      : never
+  ? DefaultSchema["Tables"][DefaultSchemaTableNameOrOptions] extends { Insert: infer I }
+    ? I
     : never
+  : never
 
 export type TablesUpdate<
   DefaultSchemaTableNameOrOptions extends
     | keyof DefaultSchema["Tables"]
     | { schema: keyof DatabaseWithoutInternals },
-  TableName extends DefaultSchemaTableNameOrOptions extends {
-    schema: keyof DatabaseWithoutInternals
-  }
+  TableName extends DefaultSchemaTableNameOrOptions extends { schema: keyof DatabaseWithoutInternals }
     ? keyof DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"]
     : never = never,
-> = DefaultSchemaTableNameOrOptions extends {
-  schema: keyof DatabaseWithoutInternals
-}
-  ? DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"][TableName] extends {
-      Update: infer U
-    }
+> = DefaultSchemaTableNameOrOptions extends { schema: keyof DatabaseWithoutInternals }
+  ? DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"][TableName] extends { Update: infer U }
     ? U
     : never
   : DefaultSchemaTableNameOrOptions extends keyof DefaultSchema["Tables"]
-    ? DefaultSchema["Tables"][DefaultSchemaTableNameOrOptions] extends {
-        Update: infer U
-      }
-      ? U
-      : never
+  ? DefaultSchema["Tables"][DefaultSchemaTableNameOrOptions] extends { Update: infer U }
+    ? U
     : never
+  : never
 
 export type Enums<
   DefaultSchemaEnumNameOrOptions extends
     | keyof DefaultSchema["Enums"]
     | { schema: keyof DatabaseWithoutInternals },
-  EnumName extends DefaultSchemaEnumNameOrOptions extends {
-    schema: keyof DatabaseWithoutInternals
-  }
+  EnumName extends DefaultSchemaEnumNameOrOptions extends { schema: keyof DatabaseWithoutInternals }
     ? keyof DatabaseWithoutInternals[DefaultSchemaEnumNameOrOptions["schema"]]["Enums"]
     : never = never,
-> = DefaultSchemaEnumNameOrOptions extends {
-  schema: keyof DatabaseWithoutInternals
-}
+> = DefaultSchemaEnumNameOrOptions extends { schema: keyof DatabaseWithoutInternals }
   ? DatabaseWithoutInternals[DefaultSchemaEnumNameOrOptions["schema"]]["Enums"][EnumName]
   : DefaultSchemaEnumNameOrOptions extends keyof DefaultSchema["Enums"]
-    ? DefaultSchema["Enums"][DefaultSchemaEnumNameOrOptions]
-    : never
+  ? DefaultSchema["Enums"][DefaultSchemaEnumNameOrOptions]
+  : never
 
 export type CompositeTypes<
   PublicCompositeTypeNameOrOptions extends
     | keyof DefaultSchema["CompositeTypes"]
     | { schema: keyof DatabaseWithoutInternals },
-  CompositeTypeName extends PublicCompositeTypeNameOrOptions extends {
-    schema: keyof DatabaseWithoutInternals
-  }
+  CompositeTypeName extends PublicCompositeTypeNameOrOptions extends { schema: keyof DatabaseWithoutInternals }
     ? keyof DatabaseWithoutInternals[PublicCompositeTypeNameOrOptions["schema"]]["CompositeTypes"]
     : never = never,
-> = PublicCompositeTypeNameOrOptions extends {
-  schema: keyof DatabaseWithoutInternals
-}
+> = PublicCompositeTypeNameOrOptions extends { schema: keyof DatabaseWithoutInternals }
   ? DatabaseWithoutInternals[PublicCompositeTypeNameOrOptions["schema"]]["CompositeTypes"][CompositeTypeName]
   : PublicCompositeTypeNameOrOptions extends keyof DefaultSchema["CompositeTypes"]
-    ? DefaultSchema["CompositeTypes"][PublicCompositeTypeNameOrOptions]
-    : never
+  ? DefaultSchema["CompositeTypes"][PublicCompositeTypeNameOrOptions]
+  : never
 
 export const Constants = {
   public: {
